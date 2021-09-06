@@ -342,7 +342,7 @@ export default class Board extends React.Component {
 
     return true;
   }
-  
+
   blockersExist(start, end, squares) {
     const startRow = 8 - Math.floor(start / 8);
     const startCol = (start % 8) + 1;
@@ -513,6 +513,7 @@ export default class Board extends React.Component {
     }
     return false;
   }
+
   stalemate(player, squares) {
     if (this.inCheck(player, squares)) return false;
 
@@ -721,13 +722,13 @@ export default class Board extends React.Component {
                   className={styles.reset_button}
                   onClick={() => this.viewHistory("back_atw")}
                 >
-                  <p className={styles.button_font}>&lt;&lt;</p>
+                  <p>&lt;&lt;</p>
                 </button>
                 <button
                   className={styles.reset_button}
                   onClick={() => this.viewHistory("back")}
                 >
-                  <p className={styles.button_font}>&lt;</p>
+                  <p>&lt;</p>
                 </button>
                 <button
                   className={styles.reset_button}
@@ -739,51 +740,14 @@ export default class Board extends React.Component {
                   className={styles.reset_button}
                   onClick={() => this.viewHistory("next")}
                 >
-                  <p className={styles.button_font}>&gt;</p>
+                  <p>&gt;</p>
                 </button>
                 <button
                   className={styles.reset_button}
                   onClick={() => this.viewHistory("next_atw")}
                 >
-                  <p className={styles.button_font}>&gt;&gt;</p>
+                  <p>&gt;&gt;</p>
                 </button>
-              </div>
-
-              <div className={styles.mate_wrapper}>
-                <p>
-                  {this.inCheck("w", this.state.squares) &&
-                  !this.checkmate("w", this.state.squares) === true
-                    ? "White is in check!"
-                    : ""}
-                </p>
-                <p>
-                  {this.inCheck("b", this.state.squares) &&
-                  !this.checkmate("b", this.state.squares) === true
-                    ? "Black is in check."
-                    : ""}
-                </p>
-                <p>
-                  {this.checkmate("w", this.state.squares) === true
-                    ? "Black won by checkmate."
-                    : ""}
-                </p>
-                <p>
-                  {this.checkmate("b", this.state.squares) === true
-                    ? "White won by checkmate!"
-                    : ""}
-                </p>
-                <p>
-                  {(this.stalemate("w", this.state.squares) &&
-                    this.state.turn === "w") === true
-                    ? "White are in stalemate. Game over."
-                    : ""}
-                </p>
-                <p>
-                  {(this.stalemate("b", this.state.squares) &&
-                    this.state.turn === "b") === true
-                    ? "Black is in stalemate. Game over."
-                    : ""}
-                </p>
               </div>
             </div>
           </div>
@@ -799,14 +763,6 @@ export default class Board extends React.Component {
   }
 
   viewHistory(direction) {
-    if (
-      this.state.historyNum - 1 === this.state.trueNum &&
-      this.state.turn === "1" &&
-      !this.state.mated
-    ) {
-      return "not allowed to view history";
-    }
-
     let copySquares = null;
     let copyWhiteCollection = null;
     let copyBlackCollection = null;
