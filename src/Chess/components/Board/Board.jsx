@@ -256,7 +256,6 @@ export default class Board extends React.Component {
     }
   }
 
-  // make a move
   makeMove(squares, start, end, passantPos) {
     const copySquares = squares.slice();
     // castling
@@ -306,7 +305,6 @@ export default class Board extends React.Component {
     return copySquares;
   }
 
-  // returns true if castling is allowed
   castlingAllowed(start, end, squares) {
     const copySquares = squares.slice();
     const player = copySquares[start].player;
@@ -490,7 +488,6 @@ export default class Board extends React.Component {
     return true;
   }
 
-  // returns true if player is in check
   inCheck(player, squares) {
     let king = player === "w" ? "k" : "K";
     let positionOfKing = null;
