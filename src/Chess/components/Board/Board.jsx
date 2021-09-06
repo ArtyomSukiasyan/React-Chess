@@ -9,9 +9,7 @@ import clearPossibleHighlight from "../../helpers/clearPossibleHighlight";
 import highlightMate from "../../helpers/highlightMate";
 import Notation from "../../helpers/notation";
 import calcSquareColor from "../../helpers/calcSquareColor";
-import castlingAllowed from "../../helpers/castlingAllowed";
-import goodPawn from "../../helpers/goodPawn";
-import blockersExist from "../../helpers/blockersExist"
+import invalidMove from "../../helpers/invalidMove";
 import styles from "../../Game.module.css";
 
 export default class Board extends React.Component {
@@ -307,41 +305,6 @@ export default class Board extends React.Component {
     return copySquares;
   }
 
-  invalidMove(start, end, squares, passantPos) {
-    const copySquares = squares.slice();
-    console.log(copySquares);
-    const bqrpk =
-      copySquares[start].ascii.toLowerCase() === "r" ||
-      copySquares[start].ascii.toLowerCase() === "q" ||
-      copySquares[start].ascii.toLowerCase() === "b" ||
-      copySquares[start].ascii.toLowerCase() === "p" ||
-      copySquares[start].ascii.toLowerCase() === "k";
-    let invalid =
-      bqrpk === true && blockersExist(start, end, copySquares) === true;
-
-    if (invalid) return invalid;
-    const pawn = copySquares[start].ascii.toLowerCase() === "p";
-    invalid =
-      pawn === true && goodPawn(start, end, copySquares, passantPos) === false;
-    if (invalid) return invalid;
-    const king = copySquares[start].ascii.toLowerCase() === "k";
-    if (king && Math.abs(end - start) === 2)
-      invalid =
-        castlingAllowed(
-          start,
-          end,
-          copySquares,
-          this.state.whiteKingHasMoved,
-          this.state.blackKingHasMoved,
-          this.state.rightWhiteRookHasMoved,
-          this.state.leftWhiteRookHasMoved,
-          this.state.rightBlackRookHasMoved,
-          this.state.leftBlackRookHasMoved
-        ) === false;
-
-    return invalid;
-  }
-
   canMoveThere(start, end, squares, passantPos) {
     const copySquares = squares.slice();
     if (start === end) return false;
@@ -352,7 +315,12 @@ export default class Board extends React.Component {
       copySquares[start].canMove(start, end) === false
     )
       return false;
-    if (this.invalidMove(start, end, copySquares, passantPos) === true)
+    if (invalidMove(start, end, copySquares, passantPos, this.state.whiteKingHasMoved,
+      this.state.blackKingHasMoved,
+      this.state.rightWhiteRookHasMoved,
+      this.state.leftWhiteRookHasMoved,
+      this.state.rightBlackRookHasMoved,
+      this.state.leftBlackRookHasMoved) === true)
       return false;
 
     const cantCastle =
@@ -402,7 +370,12 @@ export default class Board extends React.Component {
       if (copySquares[i].player !== player) {
         if (
           copySquares[i].canMove(i, positionOfKing) === true &&
-          this.invalidMove(i, positionOfKing, copySquares) === false
+          invalidMove(i, positionOfKing, copySquares, this.state.whiteKingHasMoved,
+            this.state.blackKingHasMoved,
+            this.state.rightWhiteRookHasMoved,
+            this.state.leftWhiteRookHasMoved,
+            this.state.rightBlackRookHasMoved,
+            this.state.leftBlackRookHasMoved) === false
         )
           return true;
       }
