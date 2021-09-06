@@ -574,14 +574,6 @@ export default class Board extends React.Component {
   }
 
   viewHistory(direction) {
-    if (
-      this.state.historyNum - 1 === this.state.trueNum &&
-      this.state.turn === "1" &&
-      !this.state.mated
-    ) {
-      return "not allowed to view history";
-    }
-
     let copySquares = null;
     let copyWhiteCollection = null;
     let copyBlackCollection = null;
@@ -615,7 +607,7 @@ export default class Board extends React.Component {
       copyBlackCollection =
         this.state.historyBlackCollection[this.state.historyNum];
     } else {
-      return "no more history";
+      return null
     }
 
     copySquares = clearPossibleHighlight(copySquares).slice();
