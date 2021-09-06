@@ -2,6 +2,7 @@ import React from "react";
 import Square from "../Squares/Squares";
 import Queen from "../../pieces/Queen/Queen";
 import fillerPiece from "../../pieces/piece/Piece";
+import MatchInfo from "../MatchInfo/MatchInfo";
 import initializeBoard from "../../helpers/initializeBoard";
 import clearHighlight from "../../helpers/clearHighlight";
 import clearCheckHighlight from "../../helpers/clearCheckHighlight";
@@ -268,12 +269,20 @@ export default class Board extends React.Component {
       copySquares[start].canMove(start, end) === false
     )
       return false;
-    if (invalidMove(start, end, copySquares, passantPos, this.state.whiteKingHasMoved,
-      this.state.blackKingHasMoved,
-      this.state.rightWhiteRookHasMoved,
-      this.state.leftWhiteRookHasMoved,
-      this.state.rightBlackRookHasMoved,
-      this.state.leftBlackRookHasMoved) === true)
+    if (
+      invalidMove(
+        start,
+        end,
+        copySquares,
+        passantPos,
+        this.state.whiteKingHasMoved,
+        this.state.blackKingHasMoved,
+        this.state.rightWhiteRookHasMoved,
+        this.state.leftWhiteRookHasMoved,
+        this.state.rightBlackRookHasMoved,
+        this.state.leftBlackRookHasMoved
+      ) === true
+    )
       return false;
 
     const cantCastle =
@@ -322,12 +331,17 @@ export default class Board extends React.Component {
       if (copySquares[i].player !== player) {
         if (
           copySquares[i].canMove(i, positionOfKing) === true &&
-          invalidMove(i, positionOfKing, copySquares, this.state.whiteKingHasMoved,
+          invalidMove(
+            i,
+            positionOfKing,
+            copySquares,
+            this.state.whiteKingHasMoved,
             this.state.blackKingHasMoved,
             this.state.rightWhiteRookHasMoved,
             this.state.leftWhiteRookHasMoved,
             this.state.rightBlackRookHasMoved,
-            this.state.leftBlackRookHasMoved) === false
+            this.state.leftBlackRookHasMoved
+          ) === false
         )
           return true;
       }
@@ -482,8 +496,9 @@ export default class Board extends React.Component {
       for (let j = 0; j < 8; j++) {
         const copySquares = this.state.squares.slice();
         let squareColor = calcSquareColor(i, j, copySquares);
-        let squareCursor
-        if (copySquares[i * 8 + j].player === this.state.turn) squareCursor = "pointer";
+        let squareCursor;
+        if (copySquares[i * 8 + j].player === this.state.turn)
+          squareCursor = "pointer";
 
         if (this.state.mated) squareCursor = "default";
         if (this.state.historyNum - 1 !== this.state.trueNum)
@@ -505,63 +520,14 @@ export default class Board extends React.Component {
     return (
       <div>
         <div>
-          <div className={styles.left_screen}>
-            <div className={styles.side_box}>
-              <div className={styles.wrapper}>
-                <div className={styles.player_box}>
-                  <p className={styles.medium_font}>White</p>
-                </div>
-                <div className={styles.black_player_color}>
-                  <p className={styles.medium_font}>Black</p>
-                </div>
-              </div>
-              <div className={styles.wrapper}>
-                {this.state.turn === "w" ? (
-                  <div className={styles.highlight_box}></div>
-                ) : (
-                  <div className={styles.transparent}></div>
-                )}
-                {this.state.turn === "b" ? (
-                  <div className={styles.highlight_box}></div>
-                ) : (
-                  <div className={styles.transparent}></div>
-                )}
-              </div>
-
-              <div className={styles.button_wrapper}>
-                <button
-                  className={styles.reset_button}
-                  onClick={() => this.viewHistory("back_atw")}
-                >
-                  <p>&lt;&lt;</p>
-                </button>
-                <button
-                  className={styles.reset_button}
-                  onClick={() => this.viewHistory("back")}
-                >
-                  <p>&lt;</p>
-                </button>
-                <button
-                  className={styles.reset_button}
-                  onClick={() => this.reset()}
-                >
-                  <p>Restart Game</p>
-                </button>
-                <button
-                  className={styles.reset_button}
-                  onClick={() => this.viewHistory("next")}
-                >
-                  <p>&gt;</p>
-                </button>
-                <button
-                  className={styles.reset_button}
-                  onClick={() => this.viewHistory("next_atw")}
-                >
-                  <p>&gt;&gt;</p>
-                </button>
-              </div>
-            </div>
-          </div>
+          <MatchInfo
+            turn={this.state.turn}
+            backAtw={() => this.viewHistory("back_atw")}
+            back={() => this.viewHistory("back")}
+            reset={() => this.reset()}
+            next={() => this.viewHistory("next")}
+            nextAtw={() => this.viewHistory("next_atw")}
+          />
 
           <div className={styles.right_screen}>
             <div className={styles.row_label}> {rowNums} </div>
@@ -607,7 +573,7 @@ export default class Board extends React.Component {
       copyBlackCollection =
         this.state.historyBlackCollection[this.state.historyNum];
     } else {
-      return null
+      return null;
     }
 
     copySquares = clearPossibleHighlight(copySquares).slice();
