@@ -2,12 +2,18 @@ import blockersExist from "./blockersExist";
 import castlingAllowed from "./castlingAllowed";
 import goodPawn from "./goodPawn";
 
-export default function invalidMove(start, end, squares, passantPos, whiteKingHasMoved,
+export default function invalidMove(
+  start,
+  end,
+  squares,
+  passantPos,
+  whiteKingHasMoved,
   blackKingHasMoved,
   rightWhiteRookHasMoved,
   leftWhiteRookHasMoved,
   rightBlackRookHasMoved,
-  leftBlackRookHasMoved) {
+  leftBlackRookHasMoved
+) {
   const copySquares = squares.slice();
   console.log(copySquares);
   const bqrpk =
