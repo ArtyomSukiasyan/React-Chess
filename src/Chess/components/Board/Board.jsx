@@ -10,6 +10,7 @@ import highlightMate from "../../helpers/highlightMate";
 import Notation from "../../helpers/notation";
 import calcSquareColor from "../../helpers/calcSquareColor";
 import castlingAllowed from "../../helpers/castlingAllowed";
+import goodPawn from "../../helpers/goodPawn";
 import styles from "../../Game.module.css";
 
 export default class Board extends React.Component {
@@ -334,50 +335,6 @@ export default class Board extends React.Component {
     return false;
   }
 
-  goodPawn(start, end, squares, passantPos) {
-    const passant = passantPos === null ? this.state.passantPos : passantPos;
-    const startRow = 8 - Math.floor(start / 8);
-    const startCol = (start % 8) + 1;
-    const endRow = 8 - Math.floor(end / 8);
-    const endCol = (end % 8) + 1;
-    const rowDiff = endRow - startRow;
-    const colDiff = endCol - startCol;
-    const copySquares = squares.slice();
-
-    if (rowDiff === 2 || rowDiff === -2) {
-      if (copySquares[start].player === "w" && (start < 48 || start > 55))
-        return false;
-      if (copySquares[start].player === "b" && (start < 8 || start > 15))
-        return false;
-    }
-    if (copySquares[end].ascii !== null) {
-      if (colDiff === 0) return false;
-    }
-    if (rowDiff === 1 && colDiff === 1) {
-      if (copySquares[end].ascii === null) {
-        if (copySquares[start + 1].ascii !== "P" || passant !== start + 1)
-          return false;
-      }
-    } else if (rowDiff === 1 && colDiff === -1) {
-      if (copySquares[end].ascii === null) {
-        if (copySquares[start - 1].ascii !== "P" || passant !== start - 1)
-          return false;
-      }
-    } else if (rowDiff === -1 && colDiff === 1) {
-      if (copySquares[end].ascii === null) {
-        if (copySquares[start + 1].ascii !== "p" || passant !== start + 1)
-          return false;
-      }
-    } else if (rowDiff === -1 && colDiff === -1) {
-      if (copySquares[end].ascii === null) {
-        if (copySquares[start - 1].ascii !== "p" || passant !== start - 1)
-          return false;
-      }
-    }
-
-    return true;
-  }
-
   invalidMove(start, end, squares, passantPos) {
     const copySquares = squares.slice();
     console.log(copySquares);
@@ -394,7 +351,7 @@ export default class Board extends React.Component {
     const pawn = copySquares[start].ascii.toLowerCase() === "p";
     invalid =
       pawn === true &&
-      this.goodPawn(start, end, copySquares, passantPos) === false;
+      goodPawn(start, end, copySquares, passantPos) === false;
     if (invalid) return invalid;
     const king = copySquares[start].ascii.toLowerCase() === "k";
     if (king && Math.abs(end - start) === 2) {
