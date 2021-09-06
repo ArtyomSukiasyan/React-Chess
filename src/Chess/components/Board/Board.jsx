@@ -482,8 +482,8 @@ export default class Board extends React.Component {
       for (let j = 0; j < 8; j++) {
         const copySquares = this.state.squares.slice();
         let squareColor = calcSquareColor(i, j, copySquares);
-        let squareCursor = "pointer";
-        if (copySquares[i * 8 + j].player !== "w") squareCursor = "default";
+        let squareCursor
+        if (copySquares[i * 8 + j].player === this.state.turn) squareCursor = "pointer";
 
         if (this.state.mated) squareCursor = "default";
         if (this.state.historyNum - 1 !== this.state.trueNum)
