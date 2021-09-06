@@ -9,6 +9,7 @@ import clearPossibleHighlight from "../../helpers/clearPossibleHighlight";
 import highlightMate from "../../helpers/highlightMate";
 import Notation from "../../helpers/notation";
 import calcSquareColor from "../../helpers/calcSquareColor";
+import castlingAllowed from "../../helpers/castlingAllowed";
 import styles from "../../Game.module.css";
 
 export default class Board extends React.Component {
@@ -297,42 +298,6 @@ export default class Board extends React.Component {
     return copySquares;
   }
 
-  castlingAllowed(start, end, squares) {
-    const copySquares = squares.slice();
-    const player = copySquares[start].player;
-    const deltaPos = end - start;
-    if (start !== (player === "w" ? 60 : 4)) return false;
-    if (
-      (deltaPos === 2
-        ? copySquares[end + 1].ascii
-        : copySquares[end - 2].ascii) !== (player === "w" ? "r" : "R")
-    )
-      return false;
-    if (
-      (player === "w"
-        ? this.state.whiteKingHasMoved
-        : this.state.blackKingHasMoved) !== 0
-    )
-      return false;
-    if (player === "w") {
-      if (
-        (deltaPos === 2
-          ? this.state.rightWhiteRookHasMoved
-          : this.state.leftWhiteRookHasMoved) !== 0
-      )
-        return false;
-    } else if (player === "b") {
-      if (
-        (deltaPos === 2
-          ? this.state.rightBlackRookHasMoved
-          : this.state.leftBlackRookHasMoved) !== 0
-      )
-        return false;
-    }
-
-    return true;
-  }
-
   blockersExist(start, end, squares) {
     const startRow = 8 - Math.floor(start / 8);
     const startCol = (start % 8) + 1;
@@ -432,12 +397,25 @@ export default class Board extends React.Component {
       this.goodPawn(start, end, copySquares, passantPos) === false;
     if (invalid) return invalid;
     const king = copySquares[start].ascii.toLowerCase() === "k";
-    if (king && Math.abs(end - start) === 2)
-      invalid = this.castlingAllowed(start, end, copySquares) === false;
-
-    return invalid;
-  }
+    if (king && Math.abs(end - start) === 2) {
+      invalid =
+        castlingAllowed(
+          start,
+          end,
+          copySquares,
+          this.state.whiteKingHasMoved,
+          this.state.blackKingHasMoved,
+          this.state.rightWhiteRookHasMoved,
+          this.state.leftWhiteRookHasMoved,
+          this.state.rightBlackRookHasMoved,
+          this.state.leftBlackRookHasMoved
   
+        ) === false;
+
+      return invalid;
+    }
+  }
+
   canMoveThere(start, end, squares, passantPos) {
     const copySquares = squares.slice();
     if (start === end) return false;
