@@ -368,6 +368,7 @@ export default class Board extends React.Component {
     }
     return false;
   }
+
   goodPawn(start, end, squares, passantPos) {
     const passant = passantPos === null ? this.state.passantPos : passantPos;
     const startRow = 8 - Math.floor(start / 8);
@@ -411,6 +412,7 @@ export default class Board extends React.Component {
 
     return true;
   }
+
   invalidMove(start, end, squares, passantPos) {
     const copySquares = squares.slice();
     console.log(copySquares);
@@ -435,6 +437,7 @@ export default class Board extends React.Component {
 
     return invalid;
   }
+  
   canMoveThere(start, end, squares, passantPos) {
     const copySquares = squares.slice();
     if (start === end) return false;
