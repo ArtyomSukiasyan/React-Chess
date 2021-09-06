@@ -282,7 +282,6 @@ export default class Board extends React.Component {
       this.inCheck(player, copySquares);
     if (cantCastle) return false;
 
-    // king cannot castle through check
     if (
       copySquares[start].ascii === (player === "w" ? "k" : "K") &&
       Math.abs(end - start) === 2
@@ -363,12 +362,6 @@ export default class Board extends React.Component {
 
   handleClick(i) {
     let copySquares = this.state.squares.slice();
-
-    if (this.state.historyNum - 1 !== this.state.trueNum) {
-      return "currently viewing history";
-    }
-
-    if (this.state.mated) return "game-over";
 
     if (this.state.source === -1) {
       if (copySquares[i].player !== this.state.turn) return -1;
