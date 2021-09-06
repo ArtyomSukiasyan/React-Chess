@@ -9,8 +9,8 @@ import clearPossibleHighlight from "../../helpers/clearPossibleHighlight";
 import highlightMate from "../../helpers/highlightMate";
 import Notation from "../../helpers/notation";
 import calcSquareColor from "../../helpers/calcSquareColor";
-import castlingAllowed from "../../helpers/castlingAllowed"
-import goodPawn from "../../helpers/goodPawn"
+import castlingAllowed from "../../helpers/castlingAllowed";
+import goodPawn from "../../helpers/goodPawn";
 import styles from "../../Game.module.css";
 
 export default class Board extends React.Component {
@@ -307,7 +307,7 @@ export default class Board extends React.Component {
 
     return copySquares;
   }
-  
+
   blockersExist(start, end, squares) {
     const startRow = 8 - Math.floor(start / 8);
     const startCol = (start % 8) + 1;
@@ -359,17 +359,22 @@ export default class Board extends React.Component {
     if (invalid) return invalid;
     const pawn = copySquares[start].ascii.toLowerCase() === "p";
     invalid =
-      pawn === true &&
-      goodPawn(start, end, copySquares, passantPos) === false;
+      pawn === true && goodPawn(start, end, copySquares, passantPos) === false;
     if (invalid) return invalid;
     const king = copySquares[start].ascii.toLowerCase() === "k";
     if (king && Math.abs(end - start) === 2)
-      invalid = castlingAllowed(start, end, copySquares, this.state.whiteKingHasMoved,
-        this.state.blackKingHasMoved,
-        this.state.rightWhiteRookHasMoved,
-        this.state.leftWhiteRookHasMoved,
-        this.state.rightBlackRookHasMoved,
-        this.state.leftBlackRookHasMoved) === false;
+      invalid =
+        castlingAllowed(
+          start,
+          end,
+          copySquares,
+          this.state.whiteKingHasMoved,
+          this.state.blackKingHasMoved,
+          this.state.rightWhiteRookHasMoved,
+          this.state.leftWhiteRookHasMoved,
+          this.state.rightBlackRookHasMoved,
+          this.state.leftBlackRookHasMoved
+        ) === false;
 
     return invalid;
   }
@@ -649,69 +654,32 @@ export default class Board extends React.Component {
                   className={styles.reset_button}
                   onClick={() => this.viewHistory("back_atw")}
                 >
-                  <p className={styles.button_font}>&lt;&lt;</p>
+                  <p>&lt;&lt;</p>
                 </button>
                 <button
                   className={styles.reset_button}
                   onClick={() => this.viewHistory("back")}
                 >
-                  <p className={styles.button_font}>&lt;</p>
+                  <p>&lt;</p>
                 </button>
                 <button
                   className={styles.reset_button}
                   onClick={() => this.reset()}
                 >
-                  <p className={styles.button_font}>Restart Game</p>
+                  <p>Restart Game</p>
                 </button>
                 <button
                   className={styles.reset_button}
                   onClick={() => this.viewHistory("next")}
                 >
-                  <p className={styles.button_font}>&gt;</p>
+                  <p>&gt;</p>
                 </button>
                 <button
                   className={styles.reset_button}
                   onClick={() => this.viewHistory("next_atw")}
                 >
-                  <p className={styles.button_font}>&gt;&gt;</p>
+                  <p>&gt;&gt;</p>
                 </button>
-              </div>
-
-              <div className={styles.mate_wrapper}>
-                <p>
-                  {this.inCheck("w", this.state.squares) &&
-                  !this.checkmate("w", this.state.squares) === true
-                    ? "White is in check!"
-                    : ""}
-                </p>
-                <p>
-                  {this.inCheck("b", this.state.squares) &&
-                  !this.checkmate("b", this.state.squares) === true
-                    ? "Black is in check."
-                    : ""}
-                </p>
-                <p>
-                  {this.checkmate("w", this.state.squares) === true
-                    ? "Black won by checkmate."
-                    : ""}
-                </p>
-                <p>
-                  {this.checkmate("b", this.state.squares) === true
-                    ? "White won by checkmate!"
-                    : ""}
-                </p>
-                <p>
-                  {(this.stalemate("w", this.state.squares) &&
-                    this.state.turn === "w") === true
-                    ? "White are in stalemate. Game over."
-                    : ""}
-                </p>
-                <p>
-                  {(this.stalemate("b", this.state.squares) &&
-                    this.state.turn === "b") === true
-                    ? "Black is in stalemate. Game over."
-                    : ""}
-                </p>
               </div>
             </div>
           </div>
