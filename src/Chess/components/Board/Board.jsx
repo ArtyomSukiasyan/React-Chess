@@ -9,9 +9,8 @@ import clearPossibleHighlight from "../../helpers/clearPossibleHighlight";
 import highlightMate from "../../helpers/highlightMate";
 import Notation from "../../helpers/notation";
 import calcSquareColor from "../../helpers/calcSquareColor";
-import castlingAllowed from "../../helpers/castlingAllowed";
-import goodPawn from "../../helpers/goodPawn";
-import blockersExist from "../../helpers/blockersExist";
+import castlingAllowed from "../../helpers/castlingAllowed"
+import goodPawn from "../../helpers/goodPawn"
 import styles from "../../Game.module.css";
 
 export default class Board extends React.Component {
@@ -110,6 +109,7 @@ export default class Board extends React.Component {
       }
     }
 
+    // note if king or rook has moved (castling not allowed if these have moved)
     if (copySquares[start].ascii === (player === "w" ? "k" : "K")) {
       if (player === "w") {
         this.setState({
@@ -145,6 +145,7 @@ export default class Board extends React.Component {
       }
     }
 
+    // add captured pieces to collection
     const collection =
       player === "w"
         ? this.state.piecesCollectedByWhite.slice()
@@ -155,8 +156,10 @@ export default class Board extends React.Component {
       });
     }
 
+    // make the move
     copySquares = this.makeMove(copySquares, start, end).slice();
 
+    // en passant helper
     const passantTrue =
       player === "w"
         ? copySquares[end].ascii === "p" &&
@@ -169,6 +172,7 @@ export default class Board extends React.Component {
           end - start === 16;
     let passant = passantTrue ? end : 65;
 
+    // highlight mate
     if (player === "w") {
       copySquares = highlightMate(
         "b",
@@ -254,8 +258,10 @@ export default class Board extends React.Component {
     }
   }
 
+  // make a move
   makeMove(squares, start, end, passantPos) {
     const copySquares = squares.slice();
+    // castling
     const isKing =
       copySquares[start].ascii === "k" || copySquares[start].ascii === "K";
     if (isKing && Math.abs(end - start) === 2) {
@@ -272,6 +278,7 @@ export default class Board extends React.Component {
       }
     }
 
+    // en passant
     const passant = passantPos === null ? this.state.passantPos : passantPos;
     if (copySquares[start].ascii.toLowerCase() === "p") {
       if (end - start === -7 || end - start === 9) {
@@ -288,6 +295,7 @@ export default class Board extends React.Component {
     copySquares[start] = new fillerPiece(null);
     copySquares[start].highlight = 1;
 
+    // pawn promotion
     if (copySquares[end].ascii === "p" && end >= 0 && end <= 7) {
       copySquares[end] = new Queen("w");
       copySquares[end].highlight = 1;
@@ -298,6 +306,42 @@ export default class Board extends React.Component {
     }
 
     return copySquares;
+  }
+  
+  blockersExist(start, end, squares) {
+    const startRow = 8 - Math.floor(start / 8);
+    const startCol = (start % 8) + 1;
+    const endRow = 8 - Math.floor(end / 8);
+    const endCol = (end % 8) + 1;
+    let rowDiff = endRow - startRow;
+    let colDiff = endCol - startCol;
+    let rowCtr = 0;
+    let colCtr = 0;
+    const copySquares = squares.slice();
+
+    while (colCtr !== colDiff || rowCtr !== rowDiff) {
+      let position = 64 - startRow * 8 + -8 * rowCtr + (startCol - 1 + colCtr);
+      if (
+        copySquares[position].ascii !== null &&
+        copySquares[position] !== copySquares[start]
+      )
+        return true;
+      if (colCtr !== colDiff) {
+        if (colDiff > 0) {
+          ++colCtr;
+        } else {
+          --colCtr;
+        }
+      }
+      if (rowCtr !== rowDiff) {
+        if (rowDiff > 0) {
+          ++rowCtr;
+        } else {
+          --rowCtr;
+        }
+      }
+    }
+    return false;
   }
 
   invalidMove(start, end, squares, passantPos) {
@@ -310,32 +354,25 @@ export default class Board extends React.Component {
       copySquares[start].ascii.toLowerCase() === "p" ||
       copySquares[start].ascii.toLowerCase() === "k";
     let invalid =
-      bqrpk === true && blockersExist(start, end, copySquares) === true;
+      bqrpk === true && this.blockersExist(start, end, copySquares) === true;
 
     if (invalid) return invalid;
     const pawn = copySquares[start].ascii.toLowerCase() === "p";
     invalid =
-      pawn === true && goodPawn(start, end, copySquares, passantPos) === false;
+      pawn === true &&
+      goodPawn(start, end, copySquares, passantPos) === false;
     if (invalid) return invalid;
     const king = copySquares[start].ascii.toLowerCase() === "k";
-    if (king && Math.abs(end - start) === 2) {
-      invalid =
-        castlingAllowed(
-          start,
-          end,
-          copySquares,
-          this.state.whiteKingHasMoved,
-          this.state.blackKingHasMoved,
-          this.state.rightWhiteRookHasMoved,
-          this.state.leftWhiteRookHasMoved,
-          this.state.rightBlackRookHasMoved,
-          this.state.leftBlackRookHasMoved
-        ) === false;
+    if (king && Math.abs(end - start) === 2)
+      invalid = castlingAllowed(start, end, copySquares, this.state.whiteKingHasMoved,
+        this.state.blackKingHasMoved,
+        this.state.rightWhiteRookHasMoved,
+        this.state.leftWhiteRookHasMoved,
+        this.state.rightBlackRookHasMoved,
+        this.state.leftBlackRookHasMoved) === false;
 
-      return invalid;
-    }
+    return invalid;
   }
-
   canMoveThere(start, end, squares, passantPos) {
     const copySquares = squares.slice();
     if (start === end) return false;
@@ -355,6 +392,7 @@ export default class Board extends React.Component {
       this.inCheck(player, copySquares);
     if (cantCastle) return false;
 
+    // king cannot castle through check
     if (
       copySquares[start].ascii === (player === "w" ? "k" : "K") &&
       Math.abs(end - start) === 2
@@ -366,6 +404,7 @@ export default class Board extends React.Component {
       if (this.inCheck(player, testSquares)) return false;
     }
 
+    // player cannot put or keep herself in check
     const checkSquares = squares.slice();
     checkSquares[end] = checkSquares[start];
     checkSquares[start] = new fillerPiece(null);
@@ -379,6 +418,7 @@ export default class Board extends React.Component {
     return true;
   }
 
+  // returns true if player is in check
   inCheck(player, squares) {
     let king = player === "w" ? "k" : "K";
     let positionOfKing = null;
@@ -401,7 +441,6 @@ export default class Board extends React.Component {
     }
     return false;
   }
-
   stalemate(player, squares) {
     if (this.inCheck(player, squares)) return false;
 
@@ -610,13 +649,13 @@ export default class Board extends React.Component {
                   className={styles.reset_button}
                   onClick={() => this.viewHistory("back_atw")}
                 >
-                  <p>&lt;&lt;</p>
+                  <p className={styles.button_font}>&lt;&lt;</p>
                 </button>
                 <button
                   className={styles.reset_button}
                   onClick={() => this.viewHistory("back")}
                 >
-                  <p>&lt;</p>
+                  <p className={styles.button_font}>&lt;</p>
                 </button>
                 <button
                   className={styles.reset_button}
@@ -628,14 +667,51 @@ export default class Board extends React.Component {
                   className={styles.reset_button}
                   onClick={() => this.viewHistory("next")}
                 >
-                  <p>&gt;</p>
+                  <p className={styles.button_font}>&gt;</p>
                 </button>
                 <button
                   className={styles.reset_button}
                   onClick={() => this.viewHistory("next_atw")}
                 >
-                  <p>&gt;&gt;</p>
+                  <p className={styles.button_font}>&gt;&gt;</p>
                 </button>
+              </div>
+
+              <div className={styles.mate_wrapper}>
+                <p>
+                  {this.inCheck("w", this.state.squares) &&
+                  !this.checkmate("w", this.state.squares) === true
+                    ? "White is in check!"
+                    : ""}
+                </p>
+                <p>
+                  {this.inCheck("b", this.state.squares) &&
+                  !this.checkmate("b", this.state.squares) === true
+                    ? "Black is in check."
+                    : ""}
+                </p>
+                <p>
+                  {this.checkmate("w", this.state.squares) === true
+                    ? "Black won by checkmate."
+                    : ""}
+                </p>
+                <p>
+                  {this.checkmate("b", this.state.squares) === true
+                    ? "White won by checkmate!"
+                    : ""}
+                </p>
+                <p>
+                  {(this.stalemate("w", this.state.squares) &&
+                    this.state.turn === "w") === true
+                    ? "White are in stalemate. Game over."
+                    : ""}
+                </p>
+                <p>
+                  {(this.stalemate("b", this.state.squares) &&
+                    this.state.turn === "b") === true
+                    ? "Black is in stalemate. Game over."
+                    : ""}
+                </p>
               </div>
             </div>
           </div>
@@ -651,6 +727,14 @@ export default class Board extends React.Component {
   }
 
   viewHistory(direction) {
+    if (
+      this.state.historyNum - 1 === this.state.trueNum &&
+      this.state.turn === "1" &&
+      !this.state.mated
+    ) {
+      return "not allowed to view history";
+    }
+
     let copySquares = null;
     let copyWhiteCollection = null;
     let copyBlackCollection = null;
