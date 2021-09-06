@@ -1,5 +1,4 @@
 import React from "react";
-import  ShowBoard  from "../../helpers/board";
 import Square from "../Squares/Squares";
 import Queen from "../../pieces/Queen/Queen";
 import fillerPiece from "../../pieces/piece/Piece";
@@ -453,33 +452,48 @@ export default class Board extends React.Component {
   }
 
   render() {
+    const board = [];
+    for (let i = 0; i < 8; i++) {
+      const squareRows = [];
+      for (let j = 0; j < 8; j++) {
+        const copySquares = this.state.squares.slice();
+        let squareColor = calcSquareColor(i, j, copySquares);
+        let squareCursor;
+        if (copySquares[i * 8 + j].player === this.state.turn)
+          squareCursor = "pointer";
 
+        if (this.state.mated) squareCursor = "default";
+        if (this.state.historyNum - 1 !== this.state.trueNum)
+          squareCursor = "not_allowed";
+
+        squareRows.push(
+          <Square
+            key={i * 8 + j}
+            value={copySquares[i * 8 + j]}
+            color={squareColor}
+            cursor={squareCursor}
+            onClick={() => this.handleClick(i * 8 + j)}
+          />
+        );
+      }
+      board.push(<div key={i}>{squareRows}</div>);
+    }
 
     return (
       <div>
-        <div>
-          <MatchInfo
-            turn={this.state.turn}
-            backAtw={() => this.viewHistory("back_atw")}
-            back={() => this.viewHistory("back")}
-            reset={() => this.reset()}
-            next={() => this.viewHistory("next")}
-            nextAtw={() => this.viewHistory("next_atw")}
-          />
+        <MatchInfo
+          turn={this.state.turn}
+          backAtw={() => this.viewHistory("back_atw")}
+          back={() => this.viewHistory("back")}
+          reset={() => this.reset()}
+          next={() => this.viewHistory("next")}
+          nextAtw={() => this.viewHistory("next_atw")}
+        />
 
-          <div className={styles.right_screen}>
-            <div className={styles.row_label}> {rowNums} </div>
-            <div className={styles.table}> 
-            <ShowBoard
-            squares={this.state.squares}
-            turn={this.state.turn}
-            mated={this.state.mated}
-            historyNum={this.state.historyNum}
-            trueNum={this.state.trueNum}
-            handleClick={this.handleClick}
-            /> </div>
-            <div className={styles.col_label}> {colNums} </div>
-          </div>
+        <div className={styles.right_screen}>
+          <div className={styles.row_label}> {rowNums} </div>
+          <div className={styles.table}> {board} </div>
+          <div className={styles.col_label}> {colNums} </div>
         </div>
       </div>
     );

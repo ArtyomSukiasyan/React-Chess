@@ -20,16 +20,13 @@ export default function MatchInfo({
           </div>
         </div>
         <div className={styles.wrapper}>
-          {turn === "w" ? (
-            <div className={styles.highlight_box}></div>
-          ) : (
-            <div className={styles.transparent}></div>
-          )}
-          {turn === "b" ? (
-            <div className={styles.highlight_box}></div>
-          ) : (
-            <div className={styles.transparent}></div>
-          )}
+          <div
+            className={turn === "w" ? styles.highlight_box : styles.transparent}
+          ></div>
+
+          <div
+            className={turn === "b" ? styles.highlight_box : styles.transparent}
+          ></div>
         </div>
 
         <div className={styles.button_wrapper}>
