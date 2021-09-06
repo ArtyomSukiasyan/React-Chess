@@ -9,44 +9,25 @@ export default function MatchInfo({
   nextAtw,
 }) {
   return (
-    <div className={styles.left_screen}>
-      <div className={styles.side_box}>
-        <div className={styles.wrapper}>
-          <div className={styles.player_box}>
-            <p className={styles.medium_font}>White</p>
-          </div>
-          <div className={styles.black_player_color}>
-            <p className={styles.medium_font}>Black</p>
-          </div>
-        </div>
-        <div className={styles.wrapper}>
-          <div
-            className={turn === "w" ? styles.highlight_box : styles.transparent}
-          ></div>
-
-          <div
-            className={turn === "b" ? styles.highlight_box : styles.transparent}
-          ></div>
-        </div>
-
+    
+      <div className={styles.side_box}>  
         <div className={styles.button_wrapper}>
-          <button className={styles.reset_button} onClick={backAtw}>
+          <button className={styles.button} onClick={backAtw}>
             <p>&lt;&lt;</p>
           </button>
-          <button className={styles.reset_button} onClick={back}>
+          <button className={styles.button} onClick={back}>
             <p>&lt;</p>
           </button>
-          <button className={styles.reset_button} onClick={reset}>
-            <p>Restart Game</p>
+          <button className={styles.button} onClick={reset}>
+            <p>Restart</p>
           </button>
-          <button className={styles.reset_button} onClick={next}>
+          <button className={styles.button} onClick={next}>
             <p>&gt;</p>
           </button>
-          <button className={styles.reset_button} onClick={nextAtw}>
+          <button className={styles.button} onClick={nextAtw}>
             <p>&gt;&gt;</p>
           </button>
         </div>
       </div>
-    </div>
   );
 }

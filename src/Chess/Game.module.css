@@ -3,19 +3,13 @@ body {
   color: white;
 }
 
-.right_screen {
-  position: relative;
-  display: inline-block;
-  height: 100%;
-  width: 50%;
+.game {
+  display: flex;
 }
 
-.left_screen {
-  position: relative;
-  float: left;
+.board {
   height: 100%;
   width: 50%;
-  overflow: auto;
 }
 
 .wrapper {
@@ -52,36 +46,24 @@ body {
 }
 
 .highlight_box {
-  width: 45%;
+  width: 30px;
+  height: 30px;
   background-color: #00ba6d;
-  padding: 0 20px 5px;
-  padding-right: 50px;
-  padding-bottom: 8px;
-  margin-bottom: 20px;
 }
 
 .side_box {
-  width: 65%;
-  box-sizing: border-box;
+  width: 50%;
   background-color: #77e1d7;
   color: #242424;
   border-radius: 3px;
-  box-shadow: 1px 1px 3px #232621;
-  position: relative;
-  top: calc(50% - 41vmin);
-  left: 13%;
-  margin: 0 0 30 0;
-  padding-bottom: 1px;
 }
 
 .transparent {
-  width: 45%;
-  padding: 0 20px 5px;
-  padding-right: 50px;
-  padding-bottom: 8px;
+  width: 30px;
+  height: 30px;
   color: white;
   text-align: center;
-  margin-bottom: 20px;
+  margin-top: 20px;
   background-color: transparent;
 }
 
@@ -90,41 +72,23 @@ body {
   height: auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding-bottom: 0px;
-  padding-top: 0px;
+  justify-content: space-evenly;
 }
 
-.reset_button {
-  position: relative;
+.button {
   text-align: center;
-  width: 35%;
+  width: 15%;
   cursor: pointer;
-  outline: none;
   color: white;
   background-color: #00ba6d;
   border: none;
   border-radius: 5px;
-  font-size: 0.8em;
-  transition: background-color 0.5s;
-  margin-bottom: 0px;
-  margin-top: 5px;
-  margin-right: 10px;
-  font-family: "Raleway", sans-serif;
-  font-weight: 300;
-}
-
-.reset_button:hover {
-  background-color: #00a25f;
+  margin: 0 2px;
 }
 
 .table {
-  position: absolute;
-  top: calc(50% - 42vmin);
-  left: calc(50% - 46vmin);
   width: 80vmin;
   height: 80vmin;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 15px 0 rgba(0, 0, 0, 0.19);
 }
 
 .square {
@@ -168,19 +132,11 @@ body {
 }
 
 .row_label {
-  outline: none !important;
-  position: relative;
-  top: calc(50% - 42vmin);
-  left: calc(50% - 55vmin);
   width: 10vmin;
   height: 80vmin;
 }
 
 .col_label {
-  outline: none !important;
-  position: relative;
-  top: calc(50% - 43vmin);
-  left: calc(50% - 46vmin);
   width: 80vmin;
   height: 10vmin;
 }

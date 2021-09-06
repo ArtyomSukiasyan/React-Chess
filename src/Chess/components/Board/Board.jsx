@@ -480,20 +480,38 @@ export default class Board extends React.Component {
     }
 
     return (
-      <div>
-        <MatchInfo
-          turn={this.state.turn}
-          backAtw={() => this.viewHistory("back_atw")}
-          back={() => this.viewHistory("back")}
-          reset={() => this.reset()}
-          next={() => this.viewHistory("next")}
-          nextAtw={() => this.viewHistory("next_atw")}
-        />
+      <div className={styles.game}>
+        <div>
+          <div className={styles.board}>
+            <div className={styles.row_label}> {rowNums} </div>
+            <div className={styles.table}> {board} </div>
+            <div className={styles.col_label}> {colNums} </div>
+          </div>
+          <MatchInfo
+            turn={this.state.turn}
+            backAtw={() => this.viewHistory("back_atw")}
+            back={() => this.viewHistory("back")}
+            reset={() => this.reset()}
+            next={() => this.viewHistory("next")}
+            nextAtw={() => this.viewHistory("next_atw")}
+          />
+        </div>
+        <div className={styles.wrapper}>
+          <div
+            className={
+              this.state.turn === "w"
+                ? styles.highlight_box
+                : styles.transparent
+            }
+          ></div>
 
-        <div className={styles.right_screen}>
-          <div className={styles.row_label}> {rowNums} </div>
-          <div className={styles.table}> {board} </div>
-          <div className={styles.col_label}> {colNums} </div>
+          <div
+            className={
+              this.state.turn === "b"
+                ? styles.highlight_box
+                : styles.transparent
+            }
+          ></div>
         </div>
       </div>
     );
