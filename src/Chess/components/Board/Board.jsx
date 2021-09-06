@@ -11,6 +11,7 @@ import Notation from "../../helpers/notation";
 import calcSquareColor from "../../helpers/calcSquareColor";
 import castlingAllowed from "../../helpers/castlingAllowed";
 import goodPawn from "../../helpers/goodPawn";
+import blockersExist from "../../helpers/blockersExist";
 import styles from "../../Game.module.css";
 
 export default class Board extends React.Component {
@@ -299,42 +300,6 @@ export default class Board extends React.Component {
     return copySquares;
   }
 
-  blockersExist(start, end, squares) {
-    const startRow = 8 - Math.floor(start / 8);
-    const startCol = (start % 8) + 1;
-    const endRow = 8 - Math.floor(end / 8);
-    const endCol = (end % 8) + 1;
-    let rowDiff = endRow - startRow;
-    let colDiff = endCol - startCol;
-    let rowCtr = 0;
-    let colCtr = 0;
-    const copySquares = squares.slice();
-
-    while (colCtr !== colDiff || rowCtr !== rowDiff) {
-      let position = 64 - startRow * 8 + -8 * rowCtr + (startCol - 1 + colCtr);
-      if (
-        copySquares[position].ascii !== null &&
-        copySquares[position] !== copySquares[start]
-      )
-        return true;
-      if (colCtr !== colDiff) {
-        if (colDiff > 0) {
-          ++colCtr;
-        } else {
-          --colCtr;
-        }
-      }
-      if (rowCtr !== rowDiff) {
-        if (rowDiff > 0) {
-          ++rowCtr;
-        } else {
-          --rowCtr;
-        }
-      }
-    }
-    return false;
-  }
-
   invalidMove(start, end, squares, passantPos) {
     const copySquares = squares.slice();
     console.log(copySquares);
@@ -345,13 +310,12 @@ export default class Board extends React.Component {
       copySquares[start].ascii.toLowerCase() === "p" ||
       copySquares[start].ascii.toLowerCase() === "k";
     let invalid =
-      bqrpk === true && this.blockersExist(start, end, copySquares) === true;
+      bqrpk === true && blockersExist(start, end, copySquares) === true;
 
     if (invalid) return invalid;
     const pawn = copySquares[start].ascii.toLowerCase() === "p";
     invalid =
-      pawn === true &&
-      goodPawn(start, end, copySquares, passantPos) === false;
+      pawn === true && goodPawn(start, end, copySquares, passantPos) === false;
     if (invalid) return invalid;
     const king = copySquares[start].ascii.toLowerCase() === "k";
     if (king && Math.abs(end - start) === 2) {
@@ -366,7 +330,6 @@ export default class Board extends React.Component {
           this.state.leftWhiteRookHasMoved,
           this.state.rightBlackRookHasMoved,
           this.state.leftBlackRookHasMoved
-  
         ) === false;
 
       return invalid;
