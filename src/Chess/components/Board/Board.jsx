@@ -107,7 +107,6 @@ export default class Board extends React.Component {
       }
     }
 
-    // note if king or rook has moved (castling not allowed if these have moved)
     if (copySquares[start].ascii === (player === "w" ? "k" : "K")) {
       if (player === "w") {
         this.setState({
@@ -143,7 +142,6 @@ export default class Board extends React.Component {
       }
     }
 
-    // add captured pieces to collection
     const collection =
       player === "w"
         ? this.state.piecesCollectedByWhite.slice()
@@ -154,10 +152,8 @@ export default class Board extends React.Component {
       });
     }
 
-    // make the move
     copySquares = this.makeMove(copySquares, start, end).slice();
 
-    // en passant helper
     const passantTrue =
       player === "w"
         ? copySquares[end].ascii === "p" &&
@@ -170,7 +166,6 @@ export default class Board extends React.Component {
           end - start === 16;
     let passant = passantTrue ? end : 65;
 
-    // highlight mate
     if (player === "w") {
       copySquares = highlightMate(
         "b",
@@ -258,7 +253,6 @@ export default class Board extends React.Component {
 
   makeMove(squares, start, end, passantPos) {
     const copySquares = squares.slice();
-    // castling
     const isKing =
       copySquares[start].ascii === "k" || copySquares[start].ascii === "K";
     if (isKing && Math.abs(end - start) === 2) {
@@ -275,7 +269,6 @@ export default class Board extends React.Component {
       }
     }
 
-    // en passant
     const passant = passantPos === null ? this.state.passantPos : passantPos;
     if (copySquares[start].ascii.toLowerCase() === "p") {
       if (end - start === -7 || end - start === 9) {
@@ -292,7 +285,6 @@ export default class Board extends React.Component {
     copySquares[start] = new fillerPiece(null);
     copySquares[start].highlight = 1;
 
-    // pawn promotion
     if (copySquares[end].ascii === "p" && end >= 0 && end <= 7) {
       copySquares[end] = new Queen("w");
       copySquares[end].highlight = 1;
@@ -462,7 +454,6 @@ export default class Board extends React.Component {
       this.inCheck(player, copySquares);
     if (cantCastle) return false;
 
-    // king cannot castle through check
     if (
       copySquares[start].ascii === (player === "w" ? "k" : "K") &&
       Math.abs(end - start) === 2
@@ -474,7 +465,6 @@ export default class Board extends React.Component {
       if (this.inCheck(player, testSquares)) return false;
     }
 
-    // player cannot put or keep herself in check
     const checkSquares = squares.slice();
     checkSquares[end] = checkSquares[start];
     checkSquares[start] = new fillerPiece(null);
