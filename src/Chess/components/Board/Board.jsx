@@ -258,10 +258,8 @@ export default class Board extends React.Component {
     }
   }
 
-  // make a move
   makeMove(squares, start, end, passantPos) {
     const copySquares = squares.slice();
-    // castling
     const isKing =
       copySquares[start].ascii === "k" || copySquares[start].ascii === "K";
     if (isKing && Math.abs(end - start) === 2) {
@@ -378,6 +376,7 @@ export default class Board extends React.Component {
 
     return invalid;
   }
+
   canMoveThere(start, end, squares, passantPos) {
     const copySquares = squares.slice();
     if (start === end) return false;
@@ -423,7 +422,6 @@ export default class Board extends React.Component {
     return true;
   }
 
-  // returns true if player is in check
   inCheck(player, squares) {
     let king = player === "w" ? "k" : "K";
     let positionOfKing = null;
@@ -446,6 +444,7 @@ export default class Board extends React.Component {
     }
     return false;
   }
+
   stalemate(player, squares) {
     if (this.inCheck(player, squares)) return false;
 
@@ -624,10 +623,6 @@ export default class Board extends React.Component {
         <div>
           <div className={styles.left_screen}>
             <div className={styles.side_box}>
-              <div className={styles.content + styles.title}>
-                <p className={styles.header_2_font}>Match Information</p>
-              </div>
-
               <div className={styles.wrapper}>
                 <div className={styles.player_box}>
                   <p className={styles.medium_font}>White</p>
