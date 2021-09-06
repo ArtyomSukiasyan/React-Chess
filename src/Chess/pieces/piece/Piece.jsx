@@ -1,4 +1,4 @@
-export default class filler_piece {
+export default class fillePiece {
   constructor(player) {
     this.player = player;
     this.highlight = 0;

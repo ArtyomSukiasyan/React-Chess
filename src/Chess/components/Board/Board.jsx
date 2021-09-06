@@ -10,6 +10,7 @@ import highlightMate from "../../helpers/highlightMate";
 import Notation from "../../helpers/notation";
 import calcSquareColor from "../../helpers/calcSquareColor";
 import invalidMove from "../../helpers/invalidMove";
+import makeMove from "../../helpers/makeMove";
 import styles from "../../Game.module.css";
 
 export default class Board extends React.Component {
@@ -156,7 +157,7 @@ export default class Board extends React.Component {
     }
 
     // make the move
-    copySquares = this.makeMove(copySquares, start, end).slice();
+    copySquares = makeMove(copySquares, start, end).slice();
 
     // en passant helper
     const passantTrue =
@@ -255,54 +256,6 @@ export default class Board extends React.Component {
         piecesCollectedByWhite: collection,
       });
     }
-  }
-
-  makeMove(squares, start, end, passantPos) {
-    const copySquares = squares.slice();
-    const isKing =
-      copySquares[start].ascii === "k" || copySquares[start].ascii === "K";
-    if (isKing && Math.abs(end - start) === 2) {
-      if (end === (copySquares[start].ascii === "k" ? 62 : 6)) {
-        copySquares[end - 1] = copySquares[end + 1];
-        copySquares[end - 1].highlight = 1;
-        copySquares[end + 1] = new fillerPiece(null);
-        copySquares[end + 1].highlight = 1;
-      } else if (end === (copySquares[start].ascii === "k" ? 58 : 2)) {
-        copySquares[end + 1] = copySquares[end - 2];
-        copySquares[end + 1].highlight = 1;
-        copySquares[end - 2] = new fillerPiece(null);
-        copySquares[end - 2].highlight = 1;
-      }
-    }
-
-    // en passant
-    const passant = passantPos === null ? this.state.passantPos : passantPos;
-    if (copySquares[start].ascii.toLowerCase() === "p") {
-      if (end - start === -7 || end - start === 9) {
-        if (start + 1 === passant)
-          copySquares[start + 1] = new fillerPiece(null);
-      } else if (end - start === -9 || end - start === 7) {
-        if (start - 1 === passant)
-          copySquares[start - 1] = new fillerPiece(null);
-      }
-    }
-
-    copySquares[end] = copySquares[start];
-    copySquares[end].highlight = 1;
-    copySquares[start] = new fillerPiece(null);
-    copySquares[start].highlight = 1;
-
-    // pawn promotion
-    if (copySquares[end].ascii === "p" && end >= 0 && end <= 7) {
-      copySquares[end] = new Queen("w");
-      copySquares[end].highlight = 1;
-    }
-    if (copySquares[end].ascii === "P" && end >= 56 && end <= 63) {
-      copySquares[end] = new Queen("b");
-      copySquares[end].highlight = 1;
-    }
-
-    return copySquares;
   }
 
   canMoveThere(start, end, squares, passantPos) {
