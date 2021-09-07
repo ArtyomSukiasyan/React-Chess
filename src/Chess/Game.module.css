@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   background-color: #242424;
   color: white;
@@ -5,11 +11,28 @@ body {
 
 .game {
   display: flex;
+  margin-top: 15px;
+}
+
+.table {
+  width: 80vmin;
+  height: 80vmin;
 }
 
 .board {
+  display: flex;
   height: 100%;
   width: 50%;
+}
+
+.row_label {
+  width: 10vmin;
+  height: 80vmin;
+}
+
+.col_label {
+  width: 80vmin;
+  height: 5vmin;
 }
 
 .wrapper {
@@ -52,19 +75,20 @@ body {
 }
 
 .side_box {
-  width: 50%;
+  margin-left: 10vmin;
+  width: 90%;
   background-color: #77e1d7;
   color: #242424;
   border-radius: 3px;
 }
 
 .transparent {
+  position: absolute;
+  top: 75vh;
   width: 30px;
   height: 30px;
   color: white;
-  text-align: center;
-  margin-top: 20px;
-  background-color: transparent;
+  background-color: red;
 }
 
 .button_wrapper {
@@ -77,18 +101,14 @@ body {
 
 .button {
   text-align: center;
-  width: 15%;
+  width: 20%;
+  height: 30px;
   cursor: pointer;
   color: white;
   background-color: #00ba6d;
   border: none;
   border-radius: 5px;
   margin: 0 2px;
-}
-
-.table {
-  width: 80vmin;
-  height: 80vmin;
 }
 
 .square {
@@ -129,16 +149,6 @@ body {
   font-size: 120%;
   height: 10vmin;
   width: 10vmin;
-}
-
-.row_label {
-  width: 10vmin;
-  height: 80vmin;
-}
-
-.col_label {
-  width: 80vmin;
-  height: 10vmin;
 }
 
 .white_square {

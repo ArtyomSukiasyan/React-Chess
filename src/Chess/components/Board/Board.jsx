@@ -484,8 +484,10 @@ export default class Board extends React.Component {
         <div>
           <div className={styles.board}>
             <div className={styles.row_label}> {rowNums} </div>
+            <div>
             <div className={styles.table}> {board} </div>
             <div className={styles.col_label}> {colNums} </div>
+          </div>
           </div>
           <MatchInfo
             turn={this.state.turn}
