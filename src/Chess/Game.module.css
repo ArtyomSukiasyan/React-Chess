@@ -6,7 +6,6 @@
 
 body {
   background-color: #242424;
-  color: white;
 }
 
 .game {
@@ -40,48 +39,6 @@ body {
   width: 90%;
   height: auto;
   display: flex;
-  padding-bottom: 0px;
-  padding-top: 0px;
-}
-
-.player_box {
-  display: inline-block;
-  outline: none !important;
-  width: 45%;
-  background-color: #deeaee;
-  padding: 0 15px 5px;
-  border-top-right-radius: 0px;
-  border-top-left-radius: 3px;
-  color: #242424;
-  text-align: center;
-}
-
-.black_player_color {
-  background-color: #6e4343;
-  color: white;
-  border-top-right-radius: 3px;
-  border-top-left-radius: 0px;
-  display: inline-block;
-  outline: none !important;
-  width: 45%;
-  padding: 0 15px 5px;
-  text-align: center;
-}
-
-.black_move {
-  position: absolute;
-  top: 5vh;
-  width: 30px;
-  height: 30px;
-  background-color: #00ba6d;
-}
-
-.white_move {
-  position: absolute;
-  top: 75vh;
-  width: 30px;
-  height: 30px;
-  background-color: #00ba6d;
 }
 
 .side_box {
@@ -91,8 +48,6 @@ body {
   color: #242424;
   border-radius: 3px;
 }
-
-
 
 .button_wrapper {
   width: 100%;
