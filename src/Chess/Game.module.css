@@ -68,7 +68,17 @@ body {
   text-align: center;
 }
 
-.highlight_box {
+.black_move {
+  position: absolute;
+  top: 5vh;
+  width: 30px;
+  height: 30px;
+  background-color: #00ba6d;
+}
+
+.white_move {
+  position: absolute;
+  top: 75vh;
   width: 30px;
   height: 30px;
   background-color: #00ba6d;
@@ -82,14 +92,7 @@ body {
   border-radius: 3px;
 }
 
-.transparent {
-  position: absolute;
-  top: 75vh;
-  width: 30px;
-  height: 30px;
-  color: white;
-  background-color: red;
-}
+
 
 .button_wrapper {
   width: 100%;

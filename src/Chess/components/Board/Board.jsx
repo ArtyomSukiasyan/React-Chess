@@ -502,16 +502,16 @@ export default class Board extends React.Component {
           <div
             className={
               this.state.turn === "w"
-                ? styles.highlight_box
-                : styles.transparent
+              ? styles.white_move
+              : ""
             }
           ></div>
 
           <div
             className={
               this.state.turn === "b"
-                ? styles.highlight_box
-                : styles.transparent
+                ? styles.black_move
+                : ""
             }
           ></div>
         </div>
