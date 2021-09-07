@@ -53,15 +53,7 @@ export default class Board extends React.Component {
   }
 
   reset() {
-    if (
-      this.state.historyNum - 1 === this.state.trueNum &&
-      this.state.turn === "1" &&
-      !this.state.mated
-    ) {
-      return "cannot reset";
-    }
-
-    this.setState({
+      this.setState({
       squares: initializeBoard(),
       source: -1,
       turn: "w",
@@ -160,22 +152,14 @@ export default class Board extends React.Component {
           start <= 15 &&
           end - start === 16;
     let passant = passantTrue ? end : 65;
+    const turn = player === "w" ? "w" : "b";
 
-    if (player === "w") {
-      copySquares = highlightMate(
-        "b",
-        copySquares,
-        this.checkmate("b", copySquares),
-        this.stalemate("b", copySquares)
-      ).slice();
-    } else {
-      copySquares = highlightMate(
-        "w",
-        copySquares,
-        this.checkmate("w", copySquares),
-        this.stalemate("w", copySquares)
-      ).slice();
-    }
+    copySquares = highlightMate(
+      turn,
+      copySquares,
+      this.checkmate(turn, copySquares),
+      this.stalemate(turn, copySquares)
+    ).slice();
 
     const copyHistory = this.state.history.slice();
     const copyHistoryH1 = this.state.historyH1.slice();
@@ -471,9 +455,9 @@ export default class Board extends React.Component {
           <div className={styles.board}>
             <div className={styles.row_label}> {rowNums} </div>
             <div>
-            <div className={styles.table}> {board} </div>
-            <div className={styles.col_label}> {colNums} </div>
-          </div>
+              <div className={styles.table}> {board} </div>
+              <div className={styles.col_label}> {colNums} </div>
+            </div>
           </div>
           <MatchInfo
             turn={this.state.turn}
@@ -486,19 +470,11 @@ export default class Board extends React.Component {
         </div>
         <div className={styles.wrapper}>
           <div
-            className={
-              this.state.turn === "w"
-              ? styles.white_move
-              : ""
-            }
+            className={this.state.turn === "w" ? styles.white_move : ""}
           ></div>
 
           <div
-            className={
-              this.state.turn === "b"
-                ? styles.black_move
-                : ""
-            }
+            className={this.state.turn === "b" ? styles.black_move : ""}
           ></div>
         </div>
       </div>
