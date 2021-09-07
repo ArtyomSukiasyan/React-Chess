@@ -10,6 +10,7 @@ import clearPossibleHighlight from "../../helpers/clearPossibleHighlight";
 import highlightMate from "../../helpers/highlightMate";
 import calcSquareColor from "../../helpers/calcSquareColor";
 import invalidMove from "../../helpers/invalidMove";
+import inCheck from "../../helpers/inCheck";
 import makeMove from "../../helpers/makeMove";
 import { rowNums, colNums } from "../../constants/colsAndRows";
 import styles from "../../Game.module.css";
@@ -53,7 +54,7 @@ export default class Board extends React.Component {
   }
 
   reset() {
-      this.setState({
+    this.setState({
       squares: initializeBoard(),
       source: -1,
       turn: "w",
@@ -259,7 +260,16 @@ export default class Board extends React.Component {
     const cantCastle =
       copySquares[start].ascii === (player === "w" ? "k" : "K") &&
       Math.abs(end - start) === 2 &&
-      this.inCheck(player, copySquares);
+      inCheck(
+        player,
+        copySquares,
+        this.state.whiteKingHasMoved,
+        this.state.blackKingHasMoved,
+        this.state.rightWhiteRookHasMoved,
+        this.state.leftWhiteRookHasMoved,
+        this.state.rightBlackRookHasMoved,
+        this.state.leftBlackRookHasMoved
+      );
     if (cantCastle) return false;
 
     if (
@@ -270,7 +280,19 @@ export default class Board extends React.Component {
       const testSquares = squares.slice();
       testSquares[start + (deltaPos === 2 ? 1 : -1)] = testSquares[start];
       testSquares[start] = new fillerPiece(null);
-      if (this.inCheck(player, testSquares)) return false;
+      if (
+        inCheck(
+          player,
+          testSquares,
+          this.state.whiteKingHasMoved,
+          this.state.blackKingHasMoved,
+          this.state.rightWhiteRookHasMoved,
+          this.state.leftWhiteRookHasMoved,
+          this.state.rightBlackRookHasMoved,
+          this.state.leftBlackRookHasMoved
+        )
+      )
+        return false;
     }
 
     const checkSquares = squares.slice();
@@ -281,46 +303,37 @@ export default class Board extends React.Component {
     } else if (checkSquares[end].ascii === "P" && end >= 56 && end <= 63) {
       checkSquares[end] = new Queen("b");
     }
-    if (this.inCheck(player, checkSquares) === true) return false;
+    if (
+      inCheck(
+        player,
+        checkSquares,
+        this.state.whiteKingHasMoved,
+        this.state.blackKingHasMoved,
+        this.state.rightWhiteRookHasMoved,
+        this.state.leftWhiteRookHasMoved,
+        this.state.rightBlackRookHasMoved,
+        this.state.leftBlackRookHasMoved
+      ) === true
+    )
+      return false;
 
     return true;
   }
 
-  inCheck(player, squares) {
-    let king = player === "w" ? "k" : "K";
-    let positionOfKing = null;
-    const copySquares = squares.slice();
-    for (let i = 0; i < 64; i++) {
-      if (copySquares[i].ascii === king) {
-        positionOfKing = i;
-        break;
-      }
-    }
-
-    for (let i = 0; i < 64; i++) {
-      if (copySquares[i].player !== player) {
-        if (
-          copySquares[i].canMove(i, positionOfKing) === true &&
-          invalidMove(
-            i,
-            positionOfKing,
-            copySquares,
-            this.state.whiteKingHasMoved,
-            this.state.blackKingHasMoved,
-            this.state.rightWhiteRookHasMoved,
-            this.state.leftWhiteRookHasMoved,
-            this.state.rightBlackRookHasMoved,
-            this.state.leftBlackRookHasMoved
-          ) === false
-        )
-          return true;
-      }
-    }
-    return false;
-  }
-
   stalemate(player, squares) {
-    if (this.inCheck(player, squares)) return false;
+    if (
+      inCheck(
+        player,
+        squares,
+        this.state.whiteKingHasMoved,
+        this.state.blackKingHasMoved,
+        this.state.rightWhiteRookHasMoved,
+        this.state.leftWhiteRookHasMoved,
+        this.state.rightBlackRookHasMoved,
+        this.state.leftBlackRookHasMoved
+      )
+    )
+      return false;
 
     for (let i = 0; i < 64; i++) {
       if (squares[i].player === player) {
@@ -333,7 +346,19 @@ export default class Board extends React.Component {
   }
 
   checkmate(player, squares) {
-    if (!this.inCheck(player, squares)) return false;
+    if (
+      inCheck(
+        player,
+        squares,
+        this.state.whiteKingHasMoved,
+        this.state.blackKingHasMoved,
+        this.state.rightWhiteRookHasMoved,
+        this.state.leftWhiteRookHasMoved,
+        this.state.rightBlackRookHasMoved,
+        this.state.leftBlackRookHasMoved
+      )
+    )
+      return false;
     for (let i = 0; i < 64; i++) {
       if (squares[i].player === player) {
         for (let j = 0; j < 64; j++) {
@@ -392,7 +417,16 @@ export default class Board extends React.Component {
           copySquares = clearPossibleHighlight(copySquares).slice();
           if (
             i !== this.state.source &&
-            this.inCheck("w", copySquares) === true
+            inCheck(
+              "w",
+              copySquares,
+              this.state.whiteKingHasMoved,
+              this.state.blackKingHasMoved,
+              this.state.rightWhiteRookHasMoved,
+              this.state.leftWhiteRookHasMoved,
+              this.state.rightBlackRookHasMoved,
+              this.state.leftBlackRookHasMoved
+            ) === true
           ) {
             for (let j = 0; j < 64; j++) {
               if (copySquares[j].ascii === "k") {
