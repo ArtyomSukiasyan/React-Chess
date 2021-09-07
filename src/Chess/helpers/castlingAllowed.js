@@ -9,7 +9,8 @@ export default function castlingAllowed(
   rightBlackRookHasMoved,
   leftBlackRookHasMoved
 ) {
-  const copySquares = squares.slice();
+  let copySquares = squares.slice();
+  
   const player = copySquares[start].player;
   const deltaPos = end - start;
   if (start !== (player === "w" ? 60 : 4)) return false;

@@ -1,24 +1,20 @@
 import styles from "../../Game.module.css";
 
-export default function Square(props) {
-  if (props.value !== null) {
+export default function Square({ key, value, color, cursor, onClick }) {
+  if (value !== null) {
     return (
       <div
-        className={`${styles.square} ${styles[props.color]} ${
-          styles[props.cursor]
-        }`}
-        onClick={props.onClick}
+        className={`${styles.square} ${styles[color]} ${styles[cursor]}`}
+        onClick={onClick}
       >
-        {props.value.icon}
+        {value.icon}
       </div>
     );
   } else {
     return (
       <div
-        className={`${styles.square} ${styles[props.color]} ${
-          styles[props.cursor]
-        }`}
-        onClick={props.onClick}
+        className={`${styles.square} ${styles[color]} ${styles[cursor]}`}
+        onClick={onClick}
       ></div>
     );
   }

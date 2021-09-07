@@ -155,23 +155,23 @@ body {
 }
 
 .white_square {
-  background-color: #deeaee;
+  background-color: #f0d9b5;
 }
 
 .black_square {
-  background-color: #034f84;
+  background-color: #b58863;
 }
 
 .selected_white_square {
-  background-color: #00e686;
+  background-color: #16aad3;
 }
 
 .selected_black_square {
-  background-color: #00c070;
+  background-color: #16aad3;
 }
 
 .highlighted_white_square {
-  background-color: #94fffe;
+  background-color: #a1d890;
 }
 
 .highlighted_black_square {

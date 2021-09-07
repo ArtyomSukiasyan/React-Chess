@@ -100,17 +100,8 @@ export default class Board extends React.Component {
     let copySquares = squares.slice();
 
     copySquares = clearHighlight(copySquares).slice();
-    if (player === "w") {
-      copySquares = clearPossibleHighlight(copySquares).slice();
-      for (let j = 0; j < 64; j++) {
-        if (copySquares[j].ascii === "k") {
-          copySquares[j].inCheck = 0;
-          break;
-        }
-      }
-    }
+    copySquares = clearPossibleHighlight(copySquares).slice();
 
-    // note if king or rook has moved (castling not allowed if these have moved)
     if (copySquares[start].ascii === (player === "w" ? "k" : "K")) {
       if (player === "w") {
         this.setState({
@@ -146,7 +137,6 @@ export default class Board extends React.Component {
       }
     }
 
-    // add captured pieces to collection
     const collection =
       player === "w"
         ? this.state.piecesCollectedByWhite.slice()
@@ -157,10 +147,8 @@ export default class Board extends React.Component {
       });
     }
 
-    // make the move
     copySquares = makeMove(copySquares, start, end).slice();
 
-    // en passant helper
     const passantTrue =
       player === "w"
         ? copySquares[end].ascii === "p" &&
@@ -173,7 +161,6 @@ export default class Board extends React.Component {
           end - start === 16;
     let passant = passantTrue ? end : 65;
 
-    // highlight mate
     if (player === "w") {
       copySquares = highlightMate(
         "b",
@@ -302,7 +289,6 @@ export default class Board extends React.Component {
       if (this.inCheck(player, testSquares)) return false;
     }
 
-    // player cannot put or keep herself in check
     const checkSquares = squares.slice();
     checkSquares[end] = checkSquares[start];
     checkSquares[start] = new fillerPiece(null);

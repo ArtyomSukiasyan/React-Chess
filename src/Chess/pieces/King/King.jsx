@@ -18,7 +18,6 @@ export default class King {
     this.ascii = player === "w" ? "k" : "K";
   }
 
-  // function that defines piece's valid move shape
   canMove(start, end) {
     const startRow = 8 - Math.floor(start / 8);
     const startCol = (start % 8) + 1;
