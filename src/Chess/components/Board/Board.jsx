@@ -15,7 +15,6 @@ import makeMove from "../../helpers/makeMove";
 import { rowNums, colNums } from "../../constants/colsAndRows";
 import styles from "../../Game.module.css";
 
-
 export default class Board extends React.Component {
   constructor() {
     super();
@@ -117,8 +116,6 @@ export default class Board extends React.Component {
       }
     }
 
-    
-
     copySquares = makeMove(copySquares, start, end).slice();
 
     const passantTrue =
@@ -149,8 +146,6 @@ export default class Board extends React.Component {
     copyHistory.push(copySquares);
     copyHistoryH1.push(start);
     copyHistoryH2.push(end);
-    
-   
 
     const isKing =
       copySquares[end].ascii === "k" || copySquares[end].ascii === "K";
@@ -194,7 +189,7 @@ export default class Board extends React.Component {
         firstPos: start,
         secondPos: end,
       });
-    } 
+    }
   }
 
   canMoveThere(start, end, squares, passantPos) {
@@ -398,7 +393,6 @@ export default class Board extends React.Component {
                 break;
               }
             }
-          
           }
           this.setState({
             source: -1,
@@ -479,26 +473,21 @@ export default class Board extends React.Component {
 
   viewHistory(direction) {
     let copySquares = null;
-   
 
     if (direction === "back_atw") {
       copySquares = this.state.history[0].slice();
-     
     } else if (
       direction === "next_atw" &&
       this.state.historyNum < this.state.trueNum + 1
     ) {
       copySquares = this.state.history[this.state.trueNum].slice();
-     
     } else if (direction === "back" && this.state.historyNum - 2 >= 0) {
       copySquares = this.state.history[this.state.historyNum - 2].slice();
-     
     } else if (
       direction === "next" &&
       this.state.historyNum <= this.state.trueNum
     ) {
       copySquares = this.state.history[this.state.historyNum].slice();
-     
     } else {
       return null;
     }
@@ -552,7 +541,6 @@ export default class Board extends React.Component {
       squares: copySquares,
       historyNum: newHistoryNum,
       turn: this.state.turn === "w" ? "b" : "w",
-     
     });
 
     if (direction === "back_atw" || direction === "next_atw") {
