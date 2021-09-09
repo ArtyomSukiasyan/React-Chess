@@ -12,9 +12,9 @@ import calcSquareColor from "../../helpers/calcSquareColor";
 import invalidMove from "../../helpers/invalidMove";
 import inCheck from "../../helpers/inCheck";
 import makeMove from "../../helpers/makeMove";
-import canMoveThere from "../../helpers/canMoveThere";
 import { rowNums, colNums } from "../../constants/colsAndRows";
 import styles from "../../Game.module.css";
+
 
 export default class Board extends React.Component {
   constructor() {
@@ -27,7 +27,6 @@ export default class Board extends React.Component {
       trueNum: 0,
       firstPos: null,
       secondPos: null,
-      repetition: 0,
       whiteKingHasMoved: 0,
       blackKingHasMoved: 0,
       leftBlackRookHasMoved: 0,
@@ -35,7 +34,6 @@ export default class Board extends React.Component {
       leftWhiteRookHasMoved: 0,
       rightWhiteRookHasMoved: 0,
       passantPos: 65,
-      piecesCollectedByWhite: [],
       piecesCollectedByBlack: [],
       history: [initializeBoard()],
       historyNum: 1,
@@ -47,7 +45,6 @@ export default class Board extends React.Component {
       historyBlackCollection: [null],
       mated: false,
       moveMade: false,
-      captureMade: false,
       checkFlash: false,
       viewingHistory: false,
       justClicked: false,
@@ -63,7 +60,6 @@ export default class Board extends React.Component {
       trueNum: 0,
       firstPos: null,
       secondPos: null,
-      repetition: 0,
       whiteKingHasMoved: 0,
       blackKingHasMoved: 0,
       leftBlackRookHasMoved: 0,
@@ -71,7 +67,6 @@ export default class Board extends React.Component {
       leftWhiteRookHasMoved: 0,
       rightWhiteRookHasMoved: 0,
       passantPos: 65,
-      piecesCollectedByWhite: [],
       piecesCollectedByBlack: [],
       history: [initializeBoard()],
       historyNum: 1,
@@ -83,7 +78,6 @@ export default class Board extends React.Component {
       historyBlackCollection: [null],
       mated: false,
       moveMade: false,
-      captureMade: false,
       checkFlash: false,
       viewingHistory: false,
       justClicked: false,
@@ -131,15 +125,7 @@ export default class Board extends React.Component {
       }
     }
 
-    const collection =
-      player === "w"
-        ? this.state.piecesCollectedByWhite.slice()
-        : this.state.piecesCollectedByBlack.slice();
-    if (copySquares[end].ascii !== null) {
-      this.setState({
-        captureMade: true,
-      });
-    }
+    
 
     copySquares = makeMove(copySquares, start, end).slice();
 
@@ -173,12 +159,8 @@ export default class Board extends React.Component {
     copyHistory.push(copySquares);
     copyHistoryH1.push(start);
     copyHistoryH2.push(end);
-    copyWhiteCollection.push(
-      player === "w" ? collection : this.state.piecesCollectedByWhite
-    );
-    copyBlackCollection.push(
-      player === "b" ? collection : this.state.piecesCollectedByBlack
-    );
+    
+   
 
     const isKing =
       copySquares[end].ascii === "k" || copySquares[end].ascii === "K";
@@ -223,13 +205,8 @@ export default class Board extends React.Component {
       this.setState({
         firstPos: start,
         secondPos: end,
-        piecesCollectedByBlack: collection,
       });
-    } else {
-      this.setState({
-        piecesCollectedByWhite: collection,
-      });
-    }
+    } 
   }
 
   canMoveThere(start, end, squares, passantPos) {
@@ -339,13 +316,7 @@ export default class Board extends React.Component {
     for (let i = 0; i < 64; i++) {
       if (squares[i].player === player) {
         for (let j = 0; j < 64; j++) {
-          if (canMoveThere(i, j, squares, 
-            this.state.whiteKingHasMoved,
-            this.state.blackKingHasMoved,
-            this.state.rightWhiteRookHasMoved,
-            this.state.leftWhiteRookHasMoved,
-            this.state.rightBlackRookHasMoved,
-            this.state.leftBlackRookHasMoved)) return false;
+          if (this.canMoveThere(i, j, squares)) return false;
         }
       }
     }
@@ -369,12 +340,7 @@ export default class Board extends React.Component {
     for (let i = 0; i < 64; i++) {
       if (squares[i].player === player) {
         for (let j = 0; j < 64; j++) {
-          if (canMoveThere(i, j, squares, this.state.whiteKingHasMoved,
-            this.state.blackKingHasMoved,
-            this.state.rightWhiteRookHasMoved,
-            this.state.leftWhiteRookHasMoved,
-            this.state.rightBlackRookHasMoved,
-            this.state.leftBlackRookHasMoved)) return false;
+          if (this.canMoveThere(i, j, squares)) return false;
         }
       }
     }
@@ -392,7 +358,6 @@ export default class Board extends React.Component {
           checkFlash: false,
           justClicked: false,
           moveMade: false,
-          captureMade: false,
           viewingHistory: false,
         });
 
@@ -400,12 +365,7 @@ export default class Board extends React.Component {
         copySquares[i].highlight = 1;
 
         for (let j = 0; j < 64; j++) {
-          if (canMoveThere(i, j, copySquares, this.state.whiteKingHasMoved,
-            this.state.blackKingHasMoved,
-            this.state.rightWhiteRookHasMoved,
-            this.state.leftWhiteRookHasMoved,
-            this.state.rightBlackRookHasMoved,
-            this.state.leftBlackRookHasMoved)) copySquares[j].possible = 1;
+          if (this.canMoveThere(i, j, copySquares)) copySquares[j].possible = 1;
         }
 
         this.setState({
@@ -422,12 +382,7 @@ export default class Board extends React.Component {
         copySquares[this.state.source].highlight = 0;
         copySquares = clearPossibleHighlight(copySquares).slice();
         for (let j = 0; j < 64; j++) {
-          if (canMoveThere(i, j, copySquares, this.state.whiteKingHasMoved,
-            this.state.blackKingHasMoved,
-            this.state.rightWhiteRookHasMoved,
-            this.state.leftWhiteRookHasMoved,
-            this.state.rightBlackRookHasMoved,
-            this.state.leftBlackRookHasMoved)) copySquares[j].possible = 1;
+          if (this.canMoveThere(i, j, copySquares)) copySquares[j].possible = 1;
         }
         this.setState({
           source: i,
@@ -539,37 +494,26 @@ export default class Board extends React.Component {
 
   viewHistory(direction) {
     let copySquares = null;
-    let copyWhiteCollection = null;
-    let copyBlackCollection = null;
+   
 
     if (direction === "back_atw") {
       copySquares = this.state.history[0].slice();
-      copyWhiteCollection = [];
-      copyBlackCollection = [];
+     
     } else if (
       direction === "next_atw" &&
       this.state.historyNum < this.state.trueNum + 1
     ) {
       copySquares = this.state.history[this.state.trueNum].slice();
-      copyWhiteCollection =
-        this.state.historyWhiteCollection[this.state.trueNum];
-      copyBlackCollection =
-        this.state.historyBlackCollection[this.state.trueNum];
+     
     } else if (direction === "back" && this.state.historyNum - 2 >= 0) {
       copySquares = this.state.history[this.state.historyNum - 2].slice();
-      copyWhiteCollection =
-        this.state.historyWhiteCollection[this.state.historyNum - 2];
-      copyBlackCollection =
-        this.state.historyBlackCollection[this.state.historyNum - 2];
+     
     } else if (
       direction === "next" &&
       this.state.historyNum <= this.state.trueNum
     ) {
       copySquares = this.state.history[this.state.historyNum].slice();
-      copyWhiteCollection =
-        this.state.historyWhiteCollection[this.state.historyNum];
-      copyBlackCollection =
-        this.state.historyBlackCollection[this.state.historyNum];
+     
     } else {
       return null;
     }
@@ -623,14 +567,7 @@ export default class Board extends React.Component {
       squares: copySquares,
       historyNum: newHistoryNum,
       turn: this.state.turn === "w" ? "b" : "w",
-      piecesCollectedByWhite:
-        copyWhiteCollection !== null
-          ? copyWhiteCollection
-          : this.state.piecesCollectedByWhite,
-      piecesCollectedByBlack:
-        copyBlackCollection !== null
-          ? copyBlackCollection
-          : this.state.piecesCollectedByBlack,
+     
     });
 
     if (direction === "back_atw" || direction === "next_atw") {
