@@ -12,6 +12,7 @@ import calcSquareColor from "../../helpers/calcSquareColor";
 import invalidMove from "../../helpers/invalidMove";
 import inCheck from "../../helpers/inCheck";
 import makeMove from "../../helpers/makeMove";
+import canMoveThere from "../../helpers/canMoveThere";
 import { rowNums, colNums } from "../../constants/colsAndRows";
 import styles from "../../Game.module.css";
 
@@ -338,7 +339,13 @@ export default class Board extends React.Component {
     for (let i = 0; i < 64; i++) {
       if (squares[i].player === player) {
         for (let j = 0; j < 64; j++) {
-          if (this.canMoveThere(i, j, squares)) return false;
+          if (canMoveThere(i, j, squares, 
+            this.state.whiteKingHasMoved,
+            this.state.blackKingHasMoved,
+            this.state.rightWhiteRookHasMoved,
+            this.state.leftWhiteRookHasMoved,
+            this.state.rightBlackRookHasMoved,
+            this.state.leftBlackRookHasMoved)) return false;
         }
       }
     }
@@ -362,7 +369,12 @@ export default class Board extends React.Component {
     for (let i = 0; i < 64; i++) {
       if (squares[i].player === player) {
         for (let j = 0; j < 64; j++) {
-          if (this.canMoveThere(i, j, squares)) return false;
+          if (canMoveThere(i, j, squares, this.state.whiteKingHasMoved,
+            this.state.blackKingHasMoved,
+            this.state.rightWhiteRookHasMoved,
+            this.state.leftWhiteRookHasMoved,
+            this.state.rightBlackRookHasMoved,
+            this.state.leftBlackRookHasMoved)) return false;
         }
       }
     }
@@ -388,7 +400,12 @@ export default class Board extends React.Component {
         copySquares[i].highlight = 1;
 
         for (let j = 0; j < 64; j++) {
-          if (this.canMoveThere(i, j, copySquares)) copySquares[j].possible = 1;
+          if (canMoveThere(i, j, copySquares, this.state.whiteKingHasMoved,
+            this.state.blackKingHasMoved,
+            this.state.rightWhiteRookHasMoved,
+            this.state.leftWhiteRookHasMoved,
+            this.state.rightBlackRookHasMoved,
+            this.state.leftBlackRookHasMoved)) copySquares[j].possible = 1;
         }
 
         this.setState({
@@ -405,7 +422,12 @@ export default class Board extends React.Component {
         copySquares[this.state.source].highlight = 0;
         copySquares = clearPossibleHighlight(copySquares).slice();
         for (let j = 0; j < 64; j++) {
-          if (this.canMoveThere(i, j, copySquares)) copySquares[j].possible = 1;
+          if (canMoveThere(i, j, copySquares, this.state.whiteKingHasMoved,
+            this.state.blackKingHasMoved,
+            this.state.rightWhiteRookHasMoved,
+            this.state.leftWhiteRookHasMoved,
+            this.state.rightBlackRookHasMoved,
+            this.state.leftBlackRookHasMoved)) copySquares[j].possible = 1;
         }
         this.setState({
           source: i,
