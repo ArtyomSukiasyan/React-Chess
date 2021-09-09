@@ -40,11 +40,8 @@ export default class Board extends React.Component {
       historyH2: [null],
       historyH3: [null],
       historyH4: [null],
-      historyWhiteCollection: [null],
-      historyBlackCollection: [null],
       mated: false,
       moveMade: false,
-      checkFlash: false,
       viewingHistory: false,
       justClicked: false,
     };
@@ -72,11 +69,8 @@ export default class Board extends React.Component {
       historyH2: [0],
       historyH3: [null],
       historyH4: [null],
-      historyWhiteCollection: [null],
-      historyBlackCollection: [null],
       mated: false,
       moveMade: false,
-      checkFlash: false,
       viewingHistory: false,
       justClicked: false,
     });
@@ -152,8 +146,6 @@ export default class Board extends React.Component {
     const copyHistoryH2 = this.state.historyH2.slice();
     const copyHistoryH3 = this.state.historyH3.slice();
     const copyHistoryH4 = this.state.historyH4.slice();
-    const copyWhiteCollection = this.state.historyWhiteCollection.slice();
-    const copyBlackCollection = this.state.historyBlackCollection.slice();
     copyHistory.push(copySquares);
     copyHistoryH1.push(start);
     copyHistoryH2.push(end);
@@ -188,8 +180,6 @@ export default class Board extends React.Component {
       historyH2: copyHistoryH2,
       historyH3: copyHistoryH3,
       historyH4: copyHistoryH4,
-      historyWhiteCollection: copyWhiteCollection,
-      historyBlackCollection: copyBlackCollection,
       squares: copySquares,
       source: -1,
       trueNum: this.state.trueNum + 1,
@@ -353,7 +343,6 @@ export default class Board extends React.Component {
 
       if (copySquares[i].player !== null) {
         this.setState({
-          checkFlash: false,
           justClicked: false,
           moveMade: false,
           viewingHistory: false,
@@ -409,9 +398,7 @@ export default class Board extends React.Component {
                 break;
               }
             }
-            this.setState({
-              checkFlash: true,
-            });
+          
           }
           this.setState({
             source: -1,
