@@ -14,17 +14,17 @@ export default function initializeBoard() {
   for (let i = 8 * 6; i < 8 * 6 + 8; i++) {
     squares[i] = new Pawn("w");
   }
-  // squares[1] = new Knight("b");
+  squares[1] = new Knight("b");
   squares[6] = new Knight("b");
 
   squares[56 + 1] = new Knight("w");
-  // squares[56 + 6] = new Knight("w");
+  squares[56 + 6] = new Knight("w");
 
-  // squares[2] = new Bishop("b");
+  squares[2] = new Bishop("b");
   squares[5] = new Bishop("b");
 
   squares[56 + 2] = new Bishop("w");
-  // squares[56 + 5] = new Bishop("w");
+  squares[56 + 5] = new Bishop("w");
 
   squares[0] = new Rook("b");
   squares[7] = new Rook("b");
@@ -32,7 +32,7 @@ export default function initializeBoard() {
   squares[56 + 0] = new Rook("w");
   squares[56 + 7] = new Rook("w");
 
-  // squares[3] = new Queen("b");
+  squares[3] = new Queen("b");
   squares[4] = new King("b");
 
   squares[56 + 3] = new Queen("w");

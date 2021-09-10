@@ -75,6 +75,8 @@ export default class Board extends React.Component {
     });
   }
 
+  
+
   executeMove(player, squares, start, end) {
     let copySquares = squares.slice();
 
