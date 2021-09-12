@@ -17,13 +17,13 @@ export default class Rook {
   }
 
   canMove(start, end) {
-    const start_row = 8 - Math.floor(start / 8);
-    const start_col = (start % 8) + 1;
-    const end_row = 8 - Math.floor(end / 8);
-    const end_col = (end % 8) + 1;
+    const startRow = 8 - Math.floor(start / 8);
+    const startCol = (start % 8) + 1;
+    const endRow = 8 - Math.floor(end / 8);
+    const endCol = (end % 8) + 1;
 
-    const rowDiff = end_row - start_row;
-    const colDiff = end_col - start_col;
+    const rowDiff = endRow - startRow;
+    const colDiff = endCol - startCol;
 
     if (rowDiff > 0 && colDiff === 0) {
       return true;
