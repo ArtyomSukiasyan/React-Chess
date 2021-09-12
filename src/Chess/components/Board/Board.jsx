@@ -66,14 +66,12 @@ export default class Board extends React.Component {
     let copySquares = squares.slice();
 
     copySquares = clearHighlight(copySquares).slice();
-    if (player === "w") {
       copySquares = clearPossibleHighlight(copySquares).slice();
       for (let j = 0; j < 64; j++) {
         if (copySquares[j].ascii === "k") {
           copySquares[j].in_check = 0;
           break;
         }
-      }
     }
 
     if (copySquares[start].ascii === (player === "w" ? "k" : "K")) {
@@ -547,7 +545,7 @@ export default class Board extends React.Component {
         const copySquares = this.state.squares.slice();
         let squareColor = calcSquareColor(i, j, copySquares);
         let squareCursor = "pointer";
-        if (copySquares[i * 8 + j].player !== "w") squareCursor = "default";
+        if (copySquares[i * 8 + j].player !== this.state.turn) squareCursor = "default";
         
         if (this.state.mated) squareCursor = "default";
         if (this.state.historyNum - 1 !== this.state.turnNum)

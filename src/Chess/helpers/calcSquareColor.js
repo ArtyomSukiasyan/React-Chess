@@ -30,6 +30,7 @@ export default function calcSquareColor(i, j, squares) {
         squares[i * 8 + j].checked === 1 ? "checked_square" : "stale_square";
     }
   }
+  
   function isEven(value) {
     return value % 2;
   }
