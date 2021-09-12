@@ -573,7 +573,6 @@ export default class Board extends React.Component {
             </div>
           </div>
           <MatchInfo
-            turn={this.state.turn}
             backAtw={() => this.viewHistory("back_atw")}
             back={() => this.viewHistory("back")}
             reset={() => this.reset()}

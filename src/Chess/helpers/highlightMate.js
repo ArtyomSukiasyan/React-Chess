@@ -6,9 +6,9 @@ export default function highlightMate(
 ) {
   const copySquares = squares.slice();
   if (checkMated || staleMated) {
-    for (let j = 0; j < 64; j++) {
-      if (copySquares[j].ascii === (player === "w" ? "k" : "K")) {
-        copySquares[j].checked = checkMated === true ? 1 : 2;
+    for (let i = 0; i < 64; i++) {
+      if (copySquares[i].ascii === (player === "w" ? "k" : "K")) {
+        copySquares[i].checked = checkMated === true ? 1 : 2;
         break;
       }
     }

@@ -1,7 +1,6 @@
 import styles from "../../Game.module.css";
 
 export default function MatchInfo({
-  // turn,
   backAtw,
   back,
   reset,
