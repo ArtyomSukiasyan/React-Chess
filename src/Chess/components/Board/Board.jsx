@@ -1,19 +1,16 @@
-import React from "react";
-import Square from "../Squares/Squares";
+import React from "react"
+import FillerPiece from "../../pieces/FillerPiece/FillerPiece"
 import Queen from "../../pieces/Queen/Queen";
-import fillerPiece from "../../pieces/piece/Piece";
-import MatchInfo from "../MatchInfo/MatchInfo";
-import initializeBoard from "../../helpers/initializeBoard";
+import Square from "../Squares/Squares"
+import calcSquareColor from "../../helpers/calcSquareColor";
+import initializeBoard from "../../helpers/initializeBoard"
 import clearHighlight from "../../helpers/clearHighlight";
-import clearCheckHighlight from "../../helpers/clearCheckHighlight";
 import clearPossibleHighlight from "../../helpers/clearPossibleHighlight";
 import highlightMate from "../../helpers/highlightMate";
-import calcSquareColor from "../../helpers/calcSquareColor";
-import invalidMove from "../../helpers/invalidMove";
-import inCheck from "../../helpers/inCheck";
-import makeMove from "../../helpers/makeMove";
-import { rowNums, colNums } from "../../constants/colsAndRows";
-import styles from "../../Game.module.css";
+import clearCheckHighlight from "../../helpers/clearCheckHighlight";
+import { colNums, rowNums } from "../../constants/colsAndRows";
+import MatchInfo from "../MatchInfo/MatchInfo"
+import styles from "../../Game.module.css"
 
 export default class Board extends React.Component {
   constructor() {
@@ -23,9 +20,7 @@ export default class Board extends React.Component {
       source: -1,
       turn: "w",
       trueTurn: "w",
-      trueNum: 0,
-      firstPos: null,
-      secondPos: null,
+      turnNum: 0,
       whiteKingHasMoved: 0,
       blackKingHasMoved: 0,
       leftBlackRookHasMoved: 0,
@@ -40,9 +35,6 @@ export default class Board extends React.Component {
       historyH3: [null],
       historyH4: [null],
       mated: false,
-      moveMade: false,
-      viewingHistory: false,
-      justClicked: false,
     };
   }
 
@@ -52,9 +44,7 @@ export default class Board extends React.Component {
       source: -1,
       turn: "w",
       trueTurn: "w",
-      trueNum: 0,
-      firstPos: null,
-      secondPos: null,
+      turnNum: 0,
       whiteKingHasMoved: 0,
       blackKingHasMoved: 0,
       leftBlackRookHasMoved: 0,
@@ -69,19 +59,22 @@ export default class Board extends React.Component {
       historyH3: [null],
       historyH4: [null],
       mated: false,
-      moveMade: false,
-      viewingHistory: false,
-      justClicked: false,
     });
   }
-
-  
 
   executeMove(player, squares, start, end) {
     let copySquares = squares.slice();
 
     copySquares = clearHighlight(copySquares).slice();
-    copySquares = clearPossibleHighlight(copySquares).slice();
+    if (player === "w") {
+      copySquares = clearPossibleHighlight(copySquares).slice();
+      for (let j = 0; j < 64; j++) {
+        if (copySquares[j].ascii === "k") {
+          copySquares[j].in_check = 0;
+          break;
+        }
+      }
+    }
 
     if (copySquares[start].ascii === (player === "w" ? "k" : "K")) {
       if (player === "w") {
@@ -118,9 +111,9 @@ export default class Board extends React.Component {
       }
     }
 
-    copySquares = makeMove(copySquares, start, end).slice();
+    copySquares = this.makeMove(copySquares, start, end).slice();
 
-    const passantTrue =
+    let passantTrue =
       player === "w"
         ? copySquares[end].ascii === "p" &&
           start >= 48 &&
@@ -131,14 +124,22 @@ export default class Board extends React.Component {
           start <= 15 &&
           end - start === 16;
     let passant = passantTrue ? end : 65;
-    const turn = player === "w" ? "w" : "b";
 
-    copySquares = highlightMate(
-      turn,
-      copySquares,
-      this.checkmate(turn, copySquares),
-      this.stalemate(turn, copySquares)
-    ).slice();
+    if (player === "w") {
+      copySquares = highlightMate(
+        "b",
+        copySquares,
+        this.checkmate("b", copySquares),
+        this.stalemate("b", copySquares)
+      ).slice();
+    } else {
+      copySquares = highlightMate(
+        "w",
+        copySquares,
+        this.checkmate("w", copySquares),
+        this.stalemate("w", copySquares)
+      ).slice();
+    }
 
     const copyHistory = this.state.history.slice();
     const copyHistoryH1 = this.state.historyH1.slice();
@@ -148,9 +149,10 @@ export default class Board extends React.Component {
     copyHistory.push(copySquares);
     copyHistoryH1.push(start);
     copyHistoryH2.push(end);
+    
 
-    const isKing =
-      copySquares[end].ascii === "k" || copySquares[end].ascii === "K";
+    let isKing =
+    copySquares[end].ascii === "k" || copySquares[end].ascii === "K";
     if (isKing && Math.abs(end - start) === 2) {
       if (end === (copySquares[end].ascii === "k" ? 62 : 6)) {
         copyHistoryH3.push(end - 1);
@@ -169,6 +171,7 @@ export default class Board extends React.Component {
     let staleMated =
       (this.stalemate("w", copySquares) && player === "b") ||
       (this.stalemate("b", copySquares) && player === "w");
+
     this.setState({
       passantPos: passant,
       history: copyHistory,
@@ -179,124 +182,268 @@ export default class Board extends React.Component {
       historyH4: copyHistoryH4,
       squares: copySquares,
       source: -1,
-      trueNum: this.state.trueNum + 1,
+      turnNum: this.state.turnNum + 1,
       mated: checkMated || staleMated ? true : false,
       turn: player === "b" ? "w" : "b",
       trueTurn: player === "b" ? "w" : "b",
-      moveMade: true,
     });
+  }
 
-    if (player === "b") {
-      this.setState({
-        firstPos: start,
-        secondPos: end,
-      });
+  makeMove(squares, start, end, passantPos) {
+    const copySquares = squares.slice();
+    let isKing =
+    copySquares[start].ascii === "k" || copySquares[start].ascii === "K";
+    if (isKing && Math.abs(end - start) === 2) {
+      if (end === (copySquares[start].ascii === "k" ? 62 : 6)) {
+        copySquares[end - 1] = copySquares[end + 1];
+        copySquares[end - 1].highlight = 1;
+        copySquares[end + 1] = new FillerPiece(null);
+        copySquares[end + 1].highlight = 1;
+      } else if (end === (copySquares[start].ascii === "k" ? 58 : 2)) {
+        copySquares[end + 1] = copySquares[end - 2];
+        copySquares[end + 1].highlight = 1;
+        copySquares[end - 2] = new FillerPiece(null);
+        copySquares[end - 2].highlight = 1;
+      }
     }
+
+    let passant = passantPos == null ? this.state.passantPos : passantPos;
+    if (copySquares[start].ascii.toLowerCase() === "p") {
+      if (end - start === -7 || end - start === 9) {
+        if (start + 1 === passant)
+        copySquares[start + 1] = new FillerPiece(null);
+      } else if (end - start === -9 || end - start === 7) {
+        if (start - 1 === passant)
+        copySquares[start - 1] = new FillerPiece(null);
+      }
+    }
+
+    copySquares[end] = copySquares[start];
+    copySquares[end].highlight = 1;
+    copySquares[start] = new FillerPiece(null);
+    copySquares[start].highlight = 1;
+
+    if (copySquares[end].ascii === "p" && end >= 0 && end <= 7) {
+      copySquares[end] = new Queen("w");
+      copySquares[end].highlight = 1;
+    }
+    if (copySquares[end].ascii === "P" && end >= 56 && end <= 63) {
+      copySquares[end] = new Queen("b");
+      copySquares[end].highlight = 1;
+    }
+
+    return copySquares;
+  }
+
+  castlingAllowed(start, end, squares) {
+    const copySquares = squares.slice();
+    let player = copySquares[start].player;
+    let deltaPos = end - start;
+    if (start !== (player === "w" ? 60 : 4)) return false;
+    if (
+      (deltaPos === 2
+        ? copySquares[end + 1].ascii
+        : copySquares[end - 2].ascii) !== (player === "w" ? "r" : "R")
+    )
+      return false;
+    if (
+      (player === "w"
+        ? this.state.whiteKingHasMoved
+        : this.state.blackKingHasMoved) !== 0
+    )
+      return false;
+    if (player === "w") {
+      if (
+        (deltaPos === 2
+          ? this.state.rightWhiteRookHasMoved
+          : this.state.leftWhiteRookHasMoved) !== 0
+      )
+        return false;
+    } else if (player === "b") {
+      if (
+        (deltaPos === 2
+          ? this.state.rightBlackRookHasMoved
+          : this.state.leftBlackRookHasMoved) !== 0
+      )
+        return false;
+    }
+
+    return true;
+  }
+
+  blockersExist(start, end, squares) {
+    let startRow = 8 - Math.floor(start / 8);
+    let startCol = (start % 8) + 1;
+    let endRow = 8 - Math.floor(end / 8);
+    let endCol = (end % 8) + 1;
+    let rowDiff = endRow - startRow;
+    let colDiff = endCol - startCol;
+    let rowCtr = 0;
+    let colCtr = 0;
+    const copySquares = squares.slice();
+
+    while (colCtr !== colDiff || rowCtr !== rowDiff) {
+      let position =
+        64 - startRow * 8 + -8 * rowCtr + (startCol - 1 + colCtr);
+      if (
+        copySquares[position].ascii != null &&
+        copySquares[position] !== copySquares[start]
+      )
+        return true;
+      if (colCtr !== colDiff) {
+        if (colDiff > 0) {
+          ++colCtr;
+        } else {
+          --colCtr;
+        }
+      }
+      if (rowCtr !== rowDiff) {
+        if (rowDiff > 0) {
+          ++rowCtr;
+        } else {
+          --rowCtr;
+        }
+      }
+    }
+    return false;
+  }
+  
+  goodPawn(start, end, squares, passantPos) {
+    let passant = passantPos === undefined ? this.state.passantPos : passantPos;
+    let startRow = 8 - Math.floor(start / 8);
+    let startCol = (start % 8) + 1;
+    let endRow = 8 - Math.floor(end / 8);
+    let endCol = (end % 8) + 1;
+    let rowDiff = endRow - startRow;
+    let colDiff = endCol - startCol;
+    const copySquares = squares.slice();
+
+    if (rowDiff === 2 || rowDiff === -2) {
+      if (copySquares[start].player === "w" && (start < 48 || start > 55))
+        return false;
+      if (copySquares[start].player === "b" && (start < 8 || start > 15))
+        return false;
+    }
+    if (copySquares[end].ascii !== null) {
+      if (colDiff === 0) return false;
+    }
+    if (rowDiff === 1 && colDiff === 1) {
+      if (copySquares[end].ascii === null) {
+        if (copySquares[start + 1].ascii !== "P" || passant !== start + 1)
+          return false;
+      }
+    } else if (rowDiff === 1 && colDiff === -1) {
+      if (copySquares[end].ascii === null) {
+        if (copySquares[start - 1].ascii !== "P" || passant !== start - 1)
+          return false;
+      }
+    } else if (rowDiff === -1 && colDiff === 1) {
+      if (copySquares[end].ascii === null) {
+        if (copySquares[start + 1].ascii !== "p" || passant !== start + 1)
+          return false;
+      }
+    } else if (rowDiff === -1 && colDiff === -1) {
+      if (copySquares[end].ascii === null) {
+        if (copySquares[start - 1].ascii !== "p" || passant !== start - 1)
+          return false;
+      }
+    }
+
+    return true;
+  }
+
+  invalidMove(start, end, squares, passantPos) {
+    const copySquares = squares.slice();
+    let bqrpk =
+    copySquares[start].ascii.toLowerCase() === "r" ||
+    copySquares[start].ascii.toLowerCase() === "q" ||
+    copySquares[start].ascii.toLowerCase() === "b" ||
+    copySquares[start].ascii.toLowerCase() === "p" ||
+    copySquares[start].ascii.toLowerCase() === "k";
+    let invalid =
+      bqrpk === true && this.blockersExist(start, end, copySquares) === true;
+    if (invalid) return invalid;
+    let pawn = copySquares[start].ascii.toLowerCase() === "p";
+    invalid =
+      pawn === true &&
+      this.goodPawn(start, end, copySquares, passantPos) === false;
+    if (invalid) return invalid;
+    let king = copySquares[start].ascii.toLowerCase() === "k";
+    if (king && Math.abs(end - start) === 2)
+      invalid = this.castlingAllowed(start, end, copySquares) === false;
+
+    return invalid;
   }
 
   canMoveThere(start, end, squares, passantPos) {
     const copySquares = squares.slice();
-    if (start === end) return false;
+    if (start === end)
+      return false;
 
-    const player = copySquares[start].player;
+    let player = copySquares[start].player;
     if (
       player === copySquares[end].player ||
       copySquares[start].canMove(start, end) === false
     )
       return false;
-    if (
-      invalidMove(
-        start,
-        end,
-        copySquares,
-        passantPos,
-        this.state.whiteKingHasMoved,
-        this.state.blackKingHasMoved,
-        this.state.rightWhiteRookHasMoved,
-        this.state.leftWhiteRookHasMoved,
-        this.state.rightBlackRookHasMoved,
-        this.state.leftBlackRookHasMoved
-      ) === true
-    )
+    if (this.invalidMove(start, end, copySquares, passantPos) === true)
       return false;
 
-    const cantCastle =
-      copySquares[start].ascii === (player === "w" ? "k" : "K") &&
+    let cantCastle =
+    copySquares[start].ascii === (player === "w" ? "k" : "K") &&
       Math.abs(end - start) === 2 &&
-      inCheck(
-        player,
-        copySquares,
-        this.state.whiteKingHasMoved,
-        this.state.blackKingHasMoved,
-        this.state.rightWhiteRookHasMoved,
-        this.state.leftWhiteRookHasMoved,
-        this.state.rightBlackRookHasMoved,
-        this.state.leftBlackRookHasMoved
-      );
+      this.isCheck(player, copySquares);
     if (cantCastle) return false;
 
     if (
       copySquares[start].ascii === (player === "w" ? "k" : "K") &&
       Math.abs(end - start) === 2
     ) {
-      const deltaPos = end - start;
+      let deltaPos = end - start;
       const testSquares = squares.slice();
       testSquares[start + (deltaPos === 2 ? 1 : -1)] = testSquares[start];
-      testSquares[start] = new fillerPiece(null);
-      if (
-        inCheck(
-          player,
-          testSquares,
-          this.state.whiteKingHasMoved,
-          this.state.blackKingHasMoved,
-          this.state.rightWhiteRookHasMoved,
-          this.state.leftWhiteRookHasMoved,
-          this.state.rightBlackRookHasMoved,
-          this.state.leftBlackRookHasMoved
-        )
-      )
-        return false;
+      testSquares[start] = new FillerPiece(null);
+      if (this.isCheck(player, testSquares)) return false;
     }
 
     const checkSquares = squares.slice();
     checkSquares[end] = checkSquares[start];
-    checkSquares[start] = new fillerPiece(null);
+    checkSquares[start] = new FillerPiece(null);
     if (checkSquares[end].ascii === "p" && end >= 0 && end <= 7) {
       checkSquares[end] = new Queen("w");
     } else if (checkSquares[end].ascii === "P" && end >= 56 && end <= 63) {
       checkSquares[end] = new Queen("b");
     }
-    if (
-      inCheck(
-        player,
-        checkSquares,
-        this.state.whiteKingHasMoved,
-        this.state.blackKingHasMoved,
-        this.state.rightWhiteRookHasMoved,
-        this.state.leftWhiteRookHasMoved,
-        this.state.rightBlackRookHasMoved,
-        this.state.leftBlackRookHasMoved
-      ) === true
-    )
-      return false;
+    if (this.isCheck(player, checkSquares) === true) return false;
 
     return true;
   }
 
+  isCheck(player, squares) {
+    let king = player === "w" ? "k" : "K";
+    let positionOfKing = null;
+    const copySquares = squares.slice();
+    for (let i = 0; i < 64; i++) {
+      if (copySquares[i].ascii === king) {
+        positionOfKing = i;
+        break;
+      }
+    }
+
+    for (let i = 0; i < 64; i++) {
+      if (copySquares[i].player !== player) {
+        if (
+          copySquares[i].canMove(i, positionOfKing) === true &&
+          this.invalidMove(i, positionOfKing, copySquares) === false
+        )
+          return true;
+      }
+    }
+    return false;
+  }
+
   stalemate(player, squares) {
-    if (
-      inCheck(
-        player,
-        squares,
-        this.state.whiteKingHasMoved,
-        this.state.blackKingHasMoved,
-        this.state.rightWhiteRookHasMoved,
-        this.state.leftWhiteRookHasMoved,
-        this.state.rightBlackRookHasMoved,
-        this.state.leftBlackRookHasMoved
-      )
-    )
-      return false;
+    if (this.isCheck(player, squares)) return false;
 
     for (let i = 0; i < 64; i++) {
       if (squares[i].player === player) {
@@ -309,19 +456,7 @@ export default class Board extends React.Component {
   }
 
   checkmate(player, squares) {
-    if (
-      inCheck(
-        player,
-        squares,
-        this.state.whiteKingHasMoved,
-        this.state.blackKingHasMoved,
-        this.state.rightWhiteRookHasMoved,
-        this.state.leftWhiteRookHasMoved,
-        this.state.rightBlackRookHasMoved,
-        this.state.leftBlackRookHasMoved
-      )
-    )
-      return false;
+    if (!this.isCheck(player, squares)) return false;
     for (let i = 0; i < 64; i++) {
       if (squares[i].player === player) {
         for (let j = 0; j < 64; j++) {
@@ -335,41 +470,44 @@ export default class Board extends React.Component {
   handleClick(i) {
     let copySquares = this.state.squares.slice();
 
+    if (this.state.historyNum - 1 !== this.state.turnNum) {
+      return "currently viewing history";
+    }
+
+    if (this.state.mated) return "game-over";
+
     if (this.state.source === -1) {
       if (copySquares[i].player !== this.state.turn) return -1;
 
       if (copySquares[i].player !== null) {
-        this.setState({
-          justClicked: false,
-          moveMade: false,
-          viewingHistory: false,
-        });
 
         copySquares = clearCheckHighlight(copySquares, "w").slice();
-        copySquares[i].highlight = 1;
+        copySquares[i].highlight = 1; 
 
         for (let j = 0; j < 64; j++) {
-          if (this.canMoveThere(i, j, copySquares)) copySquares[j].possible = 1;
+          if (this.canMoveThere(i, j, copySquares))
+          copySquares[j].possible = 1;
         }
 
         this.setState({
-          source: i,
+          source: i, 
           squares: copySquares,
         });
       }
     }
 
     if (this.state.source > -1) {
-      const cannibalism = copySquares[i].player === this.state.turn;
+      let cannibalism = copySquares[i].player === this.state.turn;
       if (cannibalism === true && this.state.source !== i) {
         copySquares[i].highlight = 1;
         copySquares[this.state.source].highlight = 0;
         copySquares = clearPossibleHighlight(copySquares).slice();
         for (let j = 0; j < 64; j++) {
-          if (this.canMoveThere(i, j, copySquares)) copySquares[j].possible = 1;
+          if (this.canMoveThere(i, j, copySquares))
+          copySquares[j].possible = 1;
         }
         this.setState({
-          source: i,
+          source: i, 
           squares: copySquares,
         });
       } else {
@@ -378,23 +516,15 @@ export default class Board extends React.Component {
           copySquares = clearPossibleHighlight(copySquares).slice();
           if (
             i !== this.state.source &&
-            inCheck(
-              "w",
-              copySquares,
-              this.state.whiteKingHasMoved,
-              this.state.blackKingHasMoved,
-              this.state.rightWhiteRookHasMoved,
-              this.state.leftWhiteRookHasMoved,
-              this.state.rightBlackRookHasMoved,
-              this.state.leftBlackRookHasMoved
-            ) === true
+            this.isCheck("w", copySquares) === true
           ) {
             for (let j = 0; j < 64; j++) {
               if (copySquares[j].ascii === "k") {
-                copySquares[j].inCheck = 1;
+                copySquares[j].in_check = 1;
                 break;
               }
             }
+           
           }
           this.setState({
             source: -1,
@@ -402,16 +532,12 @@ export default class Board extends React.Component {
           });
           return "invalid move";
         }
-
         this.executeMove(this.state.turn, copySquares, this.state.source, i);
-
-        this.setState({
-          moveMade: false,
-          captureMade: false,
-        });
       }
     }
   }
+
+  
 
   render() {
     const board = [];
@@ -422,11 +548,13 @@ export default class Board extends React.Component {
         let squareColor = calcSquareColor(i, j, copySquares);
         let squareCursor;
         if (copySquares[i * 8 + j].player === this.state.turn)
-          squareCursor = "pointer";
+          // squareCursor = "pointer";
 
-        if (this.state.mated) squareCursor = "default";
+        if (this.state.mated) {
+          // SquareCursor = "default";
+        }
         if (this.state.historyNum - 1 !== this.state.trueNum)
-          squareCursor = "not_allowed";
+          // squareCursor = "not_allowed";
 
         squareRows.push(
           <Square
@@ -473,38 +601,36 @@ export default class Board extends React.Component {
     );
   }
 
-  viewHistory(direction) {
+  viewHistory(direction) {    
     let copySquares = null;
 
     if (direction === "back_atw") {
       copySquares = this.state.history[0].slice();
     } else if (
       direction === "next_atw" &&
-      this.state.historyNum < this.state.trueNum + 1
+      this.state.historyNum < this.state.turnNum + 1
     ) {
-      copySquares = this.state.history[this.state.trueNum].slice();
+      copySquares = this.state.history[this.state.turnNum].slice();
     } else if (direction === "back" && this.state.historyNum - 2 >= 0) {
       copySquares = this.state.history[this.state.historyNum - 2].slice();
     } else if (
       direction === "next" &&
-      this.state.historyNum <= this.state.trueNum
+      this.state.historyNum <= this.state.turnNum
     ) {
       copySquares = this.state.history[this.state.historyNum].slice();
-    } else {
-      return null;
     }
 
     copySquares = clearPossibleHighlight(copySquares).slice();
     copySquares = clearHighlight(copySquares).slice();
     for (let j = 0; j < 64; j++) {
       if (copySquares[j].ascii === (this.state.turn === "w" ? "k" : "K")) {
-        copySquares[j].inCheck = 0;
+        copySquares[j].in_check = 0;
         copySquares[j].checked = 0;
         break;
       }
     }
 
-    const stale =
+    let stale =
       this.stalemate(this.state.trueTurn, copySquares) &&
       this.state.turn !== this.state.trueTurn;
     copySquares = highlightMate(
@@ -517,14 +643,14 @@ export default class Board extends React.Component {
     let index = null;
     if (direction === "back") index = this.state.historyNum - 2;
     else if (direction === "next") index = this.state.historyNum;
-    else if (direction === "next_atw") index = this.state.trueNum;
+    else if (direction === "next_atw") index = this.state.turnNum;
 
-    if (index !== 0 && index !== null) {
-      if (this.state.historyH1[index] !== null) {
+    if (index !== 0 && index != null) {
+      if (this.state.historyH1[index] != null) {
         copySquares[this.state.historyH1[index]].highlight = 1;
         copySquares[this.state.historyH2[index]].highlight = 1;
       }
-      if (this.state.historyH3[index] !== null) {
+      if (this.state.historyH3[index] != null) {
         copySquares[this.state.historyH3[index]].highlight = 1;
         copySquares[this.state.historyH4[index]].highlight = 1;
       }
@@ -535,14 +661,14 @@ export default class Board extends React.Component {
         ? this.state.historyNum - 1
         : this.state.historyNum + 1;
     if (direction === "back_atw") newHistoryNum = 1;
-    if (direction === "next_atw") newHistoryNum = this.state.trueNum + 1;
+    if (direction === "next_atw") newHistoryNum = this.state.turnNum + 1;
 
     this.setState({
-      viewingHistory: true,
-      justClicked: true,
       squares: copySquares,
       historyNum: newHistoryNum,
       turn: this.state.turn === "w" ? "b" : "w",
+     
+      
     });
 
     if (direction === "back_atw" || direction === "next_atw") {

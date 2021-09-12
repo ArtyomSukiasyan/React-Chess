@@ -1,4 +1,4 @@
-import Piece from "../pieces/piece/Piece";
+import Piece from "../pieces/FillerPiece/FillerPiece";
 import King from "../pieces/King/King";
 import Queen from "../pieces/Queen/Queen";
 import Rook from "../pieces/Rook/Rook";
