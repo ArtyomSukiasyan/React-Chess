@@ -350,7 +350,7 @@ export default class Board extends React.Component {
     return true;
   }
 
-  invalidMove(start, end, squares, passantPos) {
+  isInvalidMove(start, end, squares, passantPos) {
     const copySquares = squares.slice();
     let bqrpk =
     copySquares[start].ascii.toLowerCase() === "r" ||
@@ -384,7 +384,7 @@ export default class Board extends React.Component {
       copySquares[start].canMove(start, end) === false
     )
       return false;
-    if (this.invalidMove(start, end, copySquares, passantPos) === true)
+    if (this.isInvalidMove(start, end, copySquares, passantPos) === true)
       return false;
 
     let cantCastle =
@@ -432,7 +432,7 @@ export default class Board extends React.Component {
       if (copySquares[i].player !== player) {
         if (
           copySquares[i].canMove(i, positionOfKing) === true &&
-          this.invalidMove(i, positionOfKing, copySquares) === false
+          this.isInvalidMove(i, positionOfKing, copySquares) === false
         )
           return true;
       }
@@ -534,8 +534,6 @@ export default class Board extends React.Component {
       }
     }
   }
-
-  
 
   render() {
     const board = [];
