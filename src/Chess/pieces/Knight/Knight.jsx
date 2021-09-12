@@ -9,9 +9,9 @@ export default class Knight {
     this.possible = 0;
     this.icon =
       player === "w" ? (
-        <img src={whiteKnight} className={styles.piece} alt="WKN"></img>
+        <img src={whiteKnight} className={styles.piece} alt="whiteKnight"></img>
       ) : (
-        <img src={blackKnight} className={styles.piece} alt="BKN"></img>
+        <img src={blackKnight} className={styles.piece} alt="blackKnight"></img>
       );
     this.ascii = player === "w" ? "n" : "N";
   }

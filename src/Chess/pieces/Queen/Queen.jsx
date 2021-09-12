@@ -9,9 +9,9 @@ export default class Queen {
     this.possible = 0;
     this.icon =
       player === "w" ? (
-        <img src={whiteQueen} className={styles.piece} alt="WQ"></img>
+        <img src={whiteQueen} className={styles.piece} alt="whiteQueen"></img>
       ) : (
-        <img src={blackQueen} className={styles.piece} alt="BQ"></img>
+        <img src={blackQueen} className={styles.piece} alt="blackQueen"></img>
       );
     this.ascii = player === "w" ? "q" : "Q";
   }

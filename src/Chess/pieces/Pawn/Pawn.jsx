@@ -9,9 +9,9 @@ export default class Pawn {
     this.possible = 0;
     this.icon =
       player === "w" ? (
-        <img src={whitePawn} className={styles.piece} alt="WP"></img>
+        <img src={whitePawn} className={styles.piece} alt="whitePawn"></img>
       ) : (
-        <img src={blackPawn} className={styles.piece} alt="BP"></img>
+        <img src={blackPawn} className={styles.piece} alt="blackPawn"></img>
       );
     this.ascii = player === "w" ? "p" : "P";
   }

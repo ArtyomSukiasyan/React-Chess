@@ -9,9 +9,9 @@ export default class Rook {
     this.possible = 0;
     this.icon =
       player === "w" ? (
-        <img src={whiteRook} className={styles.piece} alt="WR"></img>
+        <img src={whiteRook} className={styles.piece} alt="whiteRook"></img>
       ) : (
-        <img src={blackRook} className={styles.piece} alt="BR"></img>
+        <img src={blackRook} className={styles.piece} alt="blackRook"></img>
       );
     this.ascii = player === "w" ? "r" : "R";
   }

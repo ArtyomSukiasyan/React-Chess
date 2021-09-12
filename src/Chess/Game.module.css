@@ -13,6 +13,20 @@ body {
   margin-top: 15px;
 }
 
+.white_move{
+  position: absolute;
+  top: 80vh;
+  width: 20px;
+  height: 20px;
+  background-color: #00ba6d;
+}
+
+.black_move{
+  width: 20px;
+  height: 20px;
+  background-color: #00ba6d;
+}
+
 .table {
   width: 80vmin;
   height: 80vmin;

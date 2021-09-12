@@ -11,9 +11,9 @@ export default class King {
     this.inCheck = 0;
     this.icon =
       player === "w" ? (
-        <img src={whiteKing} className={styles.piece} alt="WK"></img>
+        <img src={whiteKing} className={styles.piece} alt="whiteKing"></img>
       ) : (
-        <img src={blackKing} className={styles.piece} alt="BK"></img>
+        <img src={blackKing} className={styles.piece} alt="blackKing"></img>
       );
     this.ascii = player === "w" ? "k" : "K";
   }

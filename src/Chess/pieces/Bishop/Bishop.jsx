@@ -9,9 +9,9 @@ export default class Bishop {
     this.possible = 0;
     this.icon =
       player === "w" ? (
-        <img src={whiteBishop} className={styles.piece} alt="WB"></img>
+        <img src={whiteBishop} className={styles.piece} alt="whiteBishop"></img>
       ) : (
-        <img src={blackBishop} className={styles.piece} alt="BB"></img>
+        <img src={blackBishop} className={styles.piece} alt="blackBishop"></img>
       );
     this.ascii = player === "w" ? "b" : "B";
   }
