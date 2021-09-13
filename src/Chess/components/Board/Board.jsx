@@ -501,10 +501,10 @@ export default class Board extends React.Component {
     let copySquares = this.state.squares.slice();
 
     if (this.state.historyNum - 1 !== this.state.turnNum) {
-      return "currently viewing history";
+      return null;
     }
 
-    if (this.state.mated) return "game-over";
+    if (this.state.mated) return null;
 
     if (this.state.source === -1) {
       if (copySquares[i].player !== this.state.turn) return -1;
@@ -556,7 +556,7 @@ export default class Board extends React.Component {
             source: -1,
             squares: copySquares,
           });
-          return "invalid move";
+          return null;
         }
         this.executeMove(this.state.turn, copySquares, this.state.source, i);
       }
@@ -570,13 +570,13 @@ export default class Board extends React.Component {
       for (let j = 0; j < 8; j++) {
         const copySquares = this.state.squares.slice();
         let squareColor = calcSquareColor(i, j, copySquares);
-        let squareCursor = "pointer";
+        let squareCursor = styles.pointer;
         if (copySquares[i * 8 + j].player !== this.state.turn)
-          squareCursor = "default";
+          squareCursor = styles.default;
 
-        if (this.state.mated) squareCursor = "default";
+        if (this.state.mated) squareCursor = styles.default;
         if (this.state.historyNum - 1 !== this.state.turnNum)
-          squareCursor = "not_allowed";
+          squareCursor = styles.not_allowed;
 
         squareRows.push(
           <Square
