@@ -3,7 +3,6 @@ import FillerPiece from "../../pieces/FillerPiece/FillerPiece";
 import Queen from "../../pieces/Queen/Queen";
 import Square from "../Squares/Squares";
 import calcSquareColor from "../../helpers/calcSquareColor";
-import initializeBoard from "../../helpers/initializeBoard";
 import clearHighlight from "../../helpers/clearHighlight";
 import clearPossibleHighlight from "../../helpers/clearPossibleHighlight";
 import highlightMate from "../../helpers/highlightMate";
@@ -34,27 +33,8 @@ export default class Board extends React.Component {
   }
 
   reset() {
-    this.setState({
-      squares: initializeBoard(),
-      source: -1,
-      turn: white,
-      trueTurn: white,
-      turnNum: 0,
-      whiteKingHasMoved: false,
-      blackKingHasMoved: false,
-      leftBlackRookHasMoved: false,
-      rightBlackRookHasMoved: false,
-      leftWhiteRookHasMoved: false,
-      rightWhiteRookHasMoved: false,
-      passantPos: 65,
-      history: [initializeBoard()],
-      historyNum: 1,
-      historyH1: [null],
-      historyH2: [null],
-      historyH3: [null],
-      historyH4: [null],
-      mated: false,
-    });
+    clearHighlight(this.state.squares)
+    this.setState(state);
   }
 
   executeMove(player, squares, start, end) {
