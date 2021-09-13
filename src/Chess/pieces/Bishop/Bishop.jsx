@@ -9,6 +9,7 @@ export default class Bishop {
     this.player = player;
     this.highlight = 0;
     this.possible = 0;
+    
     this.icon =
       player === white ? (
         <img src={whiteBishopImage} className={styles.piece} alt="whiteBishop"></img>
