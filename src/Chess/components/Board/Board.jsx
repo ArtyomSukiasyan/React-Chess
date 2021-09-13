@@ -402,7 +402,7 @@ export default class Board extends React.Component {
     return invalid;
   }
 
-  canMoveThere(start, end, squares, passantPos) {
+  isMoveAvailable(start, end, squares, passantPos) {
     const copySquares = squares.slice();
     if (start === end) return false;
 
@@ -478,7 +478,7 @@ export default class Board extends React.Component {
     for (let i = 0; i < 64; i++) {
       if (squares[i].player === player) {
         for (let j = 0; j < 64; j++) {
-          if (this.canMoveThere(i, j, squares)) return false;
+          if (this.isMoveAvailable(i, j, squares)) return false;
         }
       }
     }
@@ -490,7 +490,7 @@ export default class Board extends React.Component {
     for (let i = 0; i < 64; i++) {
       if (squares[i].player === player) {
         for (let j = 0; j < 64; j++) {
-          if (this.canMoveThere(i, j, squares)) return false;
+          if (this.isMoveAvailable(i, j, squares)) return false;
         }
       }
     }
@@ -514,7 +514,7 @@ export default class Board extends React.Component {
         copySquares[i].highlight = 1;
 
         for (let j = 0; j < 64; j++) {
-          if (this.canMoveThere(i, j, copySquares)) copySquares[j].possible = 1;
+          if (this.isMoveAvailable(i, j, copySquares)) copySquares[j].possible = 1;
         }
 
         this.setState({
@@ -531,14 +531,14 @@ export default class Board extends React.Component {
         copySquares[this.state.source].highlight = 0;
         copySquares = clearPossibleHighlight(copySquares).slice();
         for (let j = 0; j < 64; j++) {
-          if (this.canMoveThere(i, j, copySquares)) copySquares[j].possible = 1;
+          if (this.isMoveAvailable(i, j, copySquares)) copySquares[j].possible = 1;
         }
         this.setState({
           source: i,
           squares: copySquares,
         });
       } else {
-        if (!this.canMoveThere(this.state.source, i, copySquares)) {
+        if (!this.isMoveAvailable(this.state.source, i, copySquares)) {
           copySquares[this.state.source].highlight = 0;
           copySquares = clearPossibleHighlight(copySquares).slice();
           if (
