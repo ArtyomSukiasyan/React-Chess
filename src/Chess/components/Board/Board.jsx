@@ -11,7 +11,7 @@ import clearCheckHighlight from "../../helpers/clearCheckHighlight";
 import MatchInfo from "../MatchInfo/MatchInfo"
 import { colNums, rowNums } from "../../constants/colsAndRows";
 import { white, black } from "../../constants/players";
-import { whiteKing, blackKing, whitePawn, blackPawn, whiteRook, blackRook } from "../../constants/asciis";
+import { whiteKing, blackKing, whiteQueen, blackQueen, whiteRook, blackRook, whiteBishop, blackBishop, whitePawn, blackPawn } from "../../constants/asciis";
 import styles from "../../Game.module.css"
 
 export default class Board extends React.Component {
@@ -208,7 +208,7 @@ export default class Board extends React.Component {
     }
 
     let passant = passantPos == null ? this.state.passantPos : passantPos;
-    if (copySquares[start].ascii.toLowerCase() === "p") {
+    if (copySquares[start].ascii === whitePawn || copySquares[start].ascii === blackPawn) {
       if (end - start === -7 || end - start === 9) {
         if (start + 1 === passant)
         copySquares[start + 1] = new FillerPiece(null);
@@ -355,15 +355,15 @@ export default class Board extends React.Component {
   isInvalidMove(start, end, squares, passantPos) {
     const copySquares = squares.slice();
     let bqrpk =
-    copySquares[start].ascii.toLowerCase() === "r" ||
-    copySquares[start].ascii.toLowerCase() === "q" ||
-    copySquares[start].ascii.toLowerCase() === "b" ||
-    copySquares[start].ascii.toLowerCase() === "p" ||
-    copySquares[start].ascii.toLowerCase() === "k";
+    copySquares[start].ascii === whiteRook || copySquares[start].ascii === blackRook ||
+    copySquares[start].ascii === whiteQueen || copySquares[start].ascii === blackQueen ||
+    copySquares[start].ascii === whiteBishop || copySquares[start].ascii === blackBishop ||
+    copySquares[start].ascii === whitePawn || copySquares[start].ascii === blackPawn ||
+    copySquares[start].ascii === whiteKing || copySquares[start].ascii === blackKing;
     let invalid =
       bqrpk === true && this.blockersExist(start, end, copySquares) === true;
     if (invalid) return invalid;
-    let pawn = copySquares[start].ascii.toLowerCase() === "p";
+    let pawn = copySquares[start].ascii === whitePawn || copySquares[start].ascii === blackPawn;
     invalid =
       pawn === true &&
       this.goodPawn(start, end, copySquares, passantPos) === false;
