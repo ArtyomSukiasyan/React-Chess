@@ -8,8 +8,9 @@ import clearHighlight from "../../helpers/clearHighlight";
 import clearPossibleHighlight from "../../helpers/clearPossibleHighlight";
 import highlightMate from "../../helpers/highlightMate";
 import clearCheckHighlight from "../../helpers/clearCheckHighlight";
-import { colNums, rowNums } from "../../constants/colsAndRows";
 import MatchInfo from "../MatchInfo/MatchInfo"
+import { colNums, rowNums } from "../../constants/colsAndRows";
+import { white, black } from "../../constants/players";
 import styles from "../../Game.module.css"
 
 export default class Board extends React.Component {
@@ -18,8 +19,8 @@ export default class Board extends React.Component {
     this.state = {
       squares: initializeBoard(),
       source: -1,
-      turn: "w",
-      trueTurn: "w",
+      turn: white,
+      trueTurn: white,
       turnNum: 0,
       whiteKingHasMoved: 0,
       blackKingHasMoved: 0,
@@ -42,8 +43,8 @@ export default class Board extends React.Component {
     this.setState({
       squares: initializeBoard(),
       source: -1,
-      turn: "w",
-      trueTurn: "w",
+      turn: white,
+      trueTurn: white,
       turnNum: 0,
       whiteKingHasMoved: 0,
       blackKingHasMoved: 0,
@@ -74,8 +75,8 @@ export default class Board extends React.Component {
         }
     }
 
-    if (copySquares[start].ascii === (player === "w" ? "k" : "K")) {
-      if (player === "w") {
+    if (copySquares[start].ascii === (player === white ? "k" : "K")) {
+      if (player === white) {
         this.setState({
           whiteKingHasMoved: 1,
         });
@@ -85,9 +86,9 @@ export default class Board extends React.Component {
         });
       }
     }
-    if (copySquares[start].ascii === (player === "w" ? "r" : "R")) {
-      if (start === (player === "w" ? 56 : 0)) {
-        if (player === "w") {
+    if (copySquares[start].ascii === (player === white ? "r" : "R")) {
+      if (start === (player === white ? 56 : 0)) {
+        if (player === white) {
           this.setState({
             leftWhiteRookHasMoved: 1,
           });
@@ -96,8 +97,8 @@ export default class Board extends React.Component {
             leftBlackRookHasMoved: 1,
           });
         }
-      } else if (start === (player === "w" ? 63 : 7)) {
-        if (player === "w") {
+      } else if (start === (player === white ? 63 : 7)) {
+        if (player === white) {
           this.setState({
             rightWhiteRookHasMoved: 1,
           });
@@ -112,7 +113,7 @@ export default class Board extends React.Component {
     copySquares = this.makeMove(copySquares, start, end).slice();
 
     let passantTrue =
-      player === "w"
+      player === white
         ? copySquares[end].ascii === "p" &&
           start >= 48 &&
           start <= 55 &&
@@ -123,19 +124,19 @@ export default class Board extends React.Component {
           end - start === 16;
     let passant = passantTrue ? end : 65;
 
-    if (player === "w") {
+    if (player === white) {
       copySquares = highlightMate(
-        "b",
+        black,
         copySquares,
-        this.checkmate("b", copySquares),
-        this.stalemate("b", copySquares)
+        this.checkmate(black, copySquares),
+        this.stalemate(black, copySquares)
       ).slice();
     } else {
       copySquares = highlightMate(
-        "w",
+        white,
         copySquares,
-        this.checkmate("w", copySquares),
-        this.stalemate("w", copySquares)
+        this.checkmate(white, copySquares),
+        this.stalemate(white, copySquares)
       ).slice();
     }
 
@@ -165,10 +166,10 @@ export default class Board extends React.Component {
     }
 
     let checkMated =
-      this.checkmate("w", copySquares) || this.checkmate("b", copySquares);
+      this.checkmate(white, copySquares) || this.checkmate(black, copySquares);
     let staleMated =
-      (this.stalemate("w", copySquares) && player === "b") ||
-      (this.stalemate("b", copySquares) && player === "w");
+      (this.stalemate(white, copySquares) && player === black) ||
+      (this.stalemate(black, copySquares) && player === white);
 
     this.setState({
       passantPos: passant,
@@ -182,8 +183,8 @@ export default class Board extends React.Component {
       source: -1,
       turnNum: this.state.turnNum + 1,
       mated: checkMated || staleMated ? true : false,
-      turn: player === "b" ? "w" : "b",
-      trueTurn: player === "b" ? "w" : "b",
+      turn: player === black ? white : black,
+      trueTurn: player === black ? white : black,
     });
   }
 
@@ -222,11 +223,11 @@ export default class Board extends React.Component {
     copySquares[start].highlight = 1;
 
     if (copySquares[end].ascii === "p" && end >= 0 && end <= 7) {
-      copySquares[end] = new Queen("w");
+      copySquares[end] = new Queen(white);
       copySquares[end].highlight = 1;
     }
     if (copySquares[end].ascii === "P" && end >= 56 && end <= 63) {
-      copySquares[end] = new Queen("b");
+      copySquares[end] = new Queen(black);
       copySquares[end].highlight = 1;
     }
 
@@ -237,27 +238,27 @@ export default class Board extends React.Component {
     const copySquares = squares.slice();
     let player = copySquares[start].player;
     let deltaPos = end - start;
-    if (start !== (player === "w" ? 60 : 4)) return false;
+    if (start !== (player === white ? 60 : 4)) return false;
     if (
       (deltaPos === 2
         ? copySquares[end + 1].ascii
-        : copySquares[end - 2].ascii) !== (player === "w" ? "r" : "R")
+        : copySquares[end - 2].ascii) !== (player === white ? "r" : "R")
     )
       return false;
     if (
-      (player === "w"
+      (player === white
         ? this.state.whiteKingHasMoved
         : this.state.blackKingHasMoved) !== 0
     )
       return false;
-    if (player === "w") {
+    if (player === white) {
       if (
         (deltaPos === 2
           ? this.state.rightWhiteRookHasMoved
           : this.state.leftWhiteRookHasMoved) !== 0
       )
         return false;
-    } else if (player === "b") {
+    } else if (player === black) {
       if (
         (deltaPos === 2
           ? this.state.rightBlackRookHasMoved
@@ -317,9 +318,9 @@ export default class Board extends React.Component {
     const copySquares = squares.slice();
 
     if (rowDiff === 2 || rowDiff === -2) {
-      if (copySquares[start].player === "w" && (start < 48 || start > 55))
+      if (copySquares[start].player === white && (start < 48 || start > 55))
         return false;
-      if (copySquares[start].player === "b" && (start < 8 || start > 15))
+      if (copySquares[start].player === black && (start < 8 || start > 15))
         return false;
     }
     if (copySquares[end].ascii !== null) {
@@ -388,13 +389,13 @@ export default class Board extends React.Component {
       return false;
 
     let cantCastle =
-    copySquares[start].ascii === (player === "w" ? "k" : "K") &&
+    copySquares[start].ascii === (player === white ? "k" : "K") &&
       Math.abs(end - start) === 2 &&
       this.isCheck(player, copySquares);
     if (cantCastle) return false;
 
     if (
-      copySquares[start].ascii === (player === "w" ? "k" : "K") &&
+      copySquares[start].ascii === (player === white ? "k" : "K") &&
       Math.abs(end - start) === 2
     ) {
       let deltaPos = end - start;
@@ -408,9 +409,9 @@ export default class Board extends React.Component {
     checkSquares[end] = checkSquares[start];
     checkSquares[start] = new FillerPiece(null);
     if (checkSquares[end].ascii === "p" && end >= 0 && end <= 7) {
-      checkSquares[end] = new Queen("w");
+      checkSquares[end] = new Queen(white);
     } else if (checkSquares[end].ascii === "P" && end >= 56 && end <= 63) {
-      checkSquares[end] = new Queen("b");
+      checkSquares[end] = new Queen(black);
     }
     if (this.isCheck(player, checkSquares) === true) return false;
 
@@ -418,7 +419,7 @@ export default class Board extends React.Component {
   }
 
   isCheck(player, squares) {
-    let king = player === "w" ? "k" : "K";
+    let king = player === white ? "k" : "K";
     let positionOfKing = null;
     const copySquares = squares.slice();
     for (let i = 0; i < 64; i++) {
@@ -479,7 +480,7 @@ export default class Board extends React.Component {
 
       if (copySquares[i].player !== null) {
 
-        copySquares = clearCheckHighlight(copySquares, "w").slice();
+        copySquares = clearCheckHighlight(copySquares, white).slice();
         copySquares[i].highlight = 1; 
 
         for (let j = 0; j < 64; j++) {
@@ -514,7 +515,7 @@ export default class Board extends React.Component {
           copySquares = clearPossibleHighlight(copySquares).slice();
           if (
             i !== this.state.source &&
-            this.isCheck("w", copySquares) === true
+            this.isCheck(white, copySquares) === true
           ) {
             for (let j = 0; j < 64; j++) {
               if (copySquares[j].ascii === "k") {
@@ -582,11 +583,11 @@ export default class Board extends React.Component {
         </div>
         <div className={styles.wrapper}>
           <div
-            className={this.state.turn === "w" ? styles.white_move : ""}
+            className={this.state.turn === white ? styles.white_move : ""}
           ></div>
 
           <div
-            className={this.state.turn === "b" ? styles.black_move : ""}
+            className={this.state.turn === black ? styles.black_move : ""}
           ></div>
         </div>
       </div>
@@ -615,7 +616,7 @@ export default class Board extends React.Component {
     copySquares = clearPossibleHighlight(copySquares).slice();
     copySquares = clearHighlight(copySquares).slice();
     for (let j = 0; j < 64; j++) {
-      if (copySquares[j].ascii === (this.state.turn === "w" ? "k" : "K")) {
+      if (copySquares[j].ascii === (this.state.turn === white ? "k" : "K")) {
         copySquares[j].in_check = 0;
         copySquares[j].checked = 0;
         break;
@@ -658,14 +659,14 @@ export default class Board extends React.Component {
     this.setState({
       squares: copySquares,
       historyNum: newHistoryNum,
-      turn: this.state.turn === "w" ? "b" : "w",
+      turn: this.state.turn === white ? black : white,
      
       
     });
 
     if (direction === "back_atw" || direction === "next_atw") {
       this.setState({
-        turn: direction === "back_atw" ? "w" : this.state.trueTurn,
+        turn: direction === "back_atw" ? white : this.state.trueTurn,
       });
     }
   }
