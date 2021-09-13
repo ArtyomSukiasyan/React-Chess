@@ -1,6 +1,7 @@
 import { white } from "../../constants/players";
-import whiteBishop from "../../images/whiteBishop.png";
-import blackBishop from "../../images/blackBishop.png";
+import { whiteBishop, blackBishop } from "../../constants/asciis";
+import whiteBishopImage from "../../images/whiteBishop.png";
+import blackBishopImage from "../../images/blackBishop.png";
 import styles from "../../Game.module.css";
 
 export default class Bishop {
@@ -10,11 +11,11 @@ export default class Bishop {
     this.possible = 0;
     this.icon =
       player === white ? (
-        <img src={whiteBishop} className={styles.piece} alt="whiteBishop"></img>
+        <img src={whiteBishopImage} className={styles.piece} alt="whiteBishop"></img>
       ) : (
-        <img src={blackBishop} className={styles.piece} alt="blackBishop"></img>
+        <img src={blackBishopImage} className={styles.piece} alt="blackBishop"></img>
       );
-    this.ascii = player === white ? "b" : "B";
+    this.ascii = player === white ? whiteBishop : blackBishop;
   }
 
   canMove(start, end) {

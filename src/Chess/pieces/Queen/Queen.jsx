@@ -1,6 +1,7 @@
 import { white } from "../../constants/players";
-import whiteQueen from "../../images/whiteQueen.png";
-import blackQueen from "../../images/blackQueen.png";
+import { whiteQueen, blackQueen } from "../../constants/asciis";
+import whiteQueenImage from "../../images/whiteQueen.png";
+import blackQueenImage from "../../images/blackQueen.png";
 import styles from "../../Game.module.css";
 
 export default class Queen {
@@ -10,11 +11,11 @@ export default class Queen {
     this.possible = 0;
     this.icon =
       player === white ? (
-        <img src={whiteQueen} className={styles.piece} alt="whiteQueen"></img>
+        <img src={whiteQueenImage} className={styles.piece} alt="whiteQueen"></img>
       ) : (
-        <img src={blackQueen} className={styles.piece} alt="blackQueen"></img>
+        <img src={blackQueenImage} className={styles.piece} alt="blackQueen"></img>
       );
-    this.ascii = player === white ? "q" : "Q";
+    this.ascii = player === white ? whiteQueen : blackQueen;
   }
 
   canMove(start, end) {
