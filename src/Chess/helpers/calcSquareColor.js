@@ -19,7 +19,7 @@ export default function calcSquareColor(i, j, squares) {
     squares[i * 8 + j].ascii !== null &&
     squares[i * 8 + j].ascii.toLowerCase() === "k"
   ) {
-    if (squares[i * 8 + j].inCheck === true) {
+    if (squares[i * 8 + j].inCheck) {
       squareColor =
         (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j))
           ? "in_check_square_white"

@@ -6,8 +6,7 @@ export default function clearCheckHighlight(squares, player) {
   for (let j = 0; j < 64; j++) {
     if (copySquares[j].ascii === (player === white ? whiteKing : blackKing)) {
       copySquares[j].inCheck = false;
-      break;
+      return copySquares;
     }
   }
-  return copySquares;
 }

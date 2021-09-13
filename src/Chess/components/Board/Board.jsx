@@ -11,6 +11,7 @@ import MatchInfo from "../MatchInfo/MatchInfo";
 import { state } from "../../constants/state";
 import { colNums, rowNums } from "../../constants/colsAndRows";
 import { white, black } from "../../constants/players";
+
 import {
   whiteKing,
   blackKing,
@@ -25,6 +26,8 @@ import {
 } from "../../constants/asciis";
 import { next, back, nextAtw, backAtw } from "../../constants/histories";
 import styles from "../../Game.module.css";
+
+
 
 export default class Board extends React.Component {
   constructor() {
@@ -93,13 +96,13 @@ export default class Board extends React.Component {
     let passantTrue =
       player === white
         ? copySquares[end].ascii === whitePawn &&
-          start >= 48 &&
-          start <= 55 &&
-          end - start === -16
+        start >= 48 &&
+        start <= 55 &&
+        end - start === -16
         : copySquares[end].ascii === blackPawn &&
-          start >= 8 &&
-          start <= 15 &&
-          end - start === 16;
+        start >= 8 &&
+        start <= 15 &&
+        end - start === 16;
     let passant = passantTrue ? end : 65;
 
     if (player === white) {
@@ -543,7 +546,7 @@ export default class Board extends React.Component {
 
         squareRows.push(
           <Square
-            key={i * 8 + j}
+            id={i * 8 + j}
             value={copySquares[i * 8 + j]}
             color={squareColor}
             cursor={squareCursor}
@@ -551,7 +554,7 @@ export default class Board extends React.Component {
           />
         );
       }
-      board.push(<div key={i}>{squareRows}</div>);
+      board.push(<div key={i + 64}>{squareRows}</div>);
     }
 
     return (

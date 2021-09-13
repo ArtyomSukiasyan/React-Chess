@@ -12,9 +12,11 @@ export default function initializeBoard() {
   for (let i = 8; i < 16; i++) {
     squares[i] = new Pawn(black);
   }
+
   for (let i = 8 * 6; i < 8 * 6 + 8; i++) {
     squares[i] = new Pawn(white);
   }
+
   squares[1] = new Knight(black);
   squares[6] = new Knight(black);
 

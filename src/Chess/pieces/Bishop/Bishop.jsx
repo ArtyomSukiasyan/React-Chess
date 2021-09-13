@@ -9,12 +9,20 @@ export default class Bishop {
     this.player = player;
     this.highlight = 0;
     this.possible = 0;
-    
+
     this.icon =
       player === white ? (
-        <img src={whiteBishopImage} className={styles.piece} alt="whiteBishop"></img>
+        <img
+          src={whiteBishopImage}
+          className={styles.piece}
+          alt="whiteBishop"
+        ></img>
       ) : (
-        <img src={blackBishopImage} className={styles.piece} alt="blackBishop"></img>
+        <img
+          src={blackBishopImage}
+          className={styles.piece}
+          alt="blackBishop"
+        ></img>
       );
     this.ascii = player === white ? whiteBishop : blackBishop;
   }
@@ -28,11 +36,6 @@ export default class Bishop {
     const rowDiff = endRow - startRow;
     const colDiff = endCol - startCol;
 
-    if (rowDiff === colDiff) {
-      return true;
-    } else if (rowDiff === -colDiff) {
-      return true;
-    }
-    return false;
+    return rowDiff === colDiff || rowDiff === -colDiff;
   }
 }

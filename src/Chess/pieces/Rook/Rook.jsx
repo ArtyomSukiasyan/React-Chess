@@ -11,9 +11,17 @@ export default class Rook {
     this.possible = 0;
     this.icon =
       player === white ? (
-        <img src={whiteRookImage} className={styles.piece} alt="whiteRook"></img>
+        <img
+          src={whiteRookImage}
+          className={styles.piece}
+          alt="whiteRook"
+        ></img>
       ) : (
-        <img src={blackRookImage} className={styles.piece} alt="blackRook"></img>
+        <img
+          src={blackRookImage}
+          className={styles.piece}
+          alt="blackRook"
+        ></img>
       );
     this.ascii = player === white ? whiteRook : blackRook;
   }
@@ -27,15 +35,6 @@ export default class Rook {
     const rowDiff = endRow - startRow;
     const colDiff = endCol - startCol;
 
-    if (rowDiff > 0 && colDiff === 0) {
-      return true;
-    } else if (rowDiff === 0 && colDiff > 0) {
-      return true;
-    } else if (rowDiff < 0 && colDiff === 0) {
-      return true;
-    } else if (rowDiff === 0 && colDiff < 0) {
-      return true;
-    }
-    return false;
+    return rowDiff * colDiff === 0 && rowDiff + colDiff !== 0;
   }
 }
