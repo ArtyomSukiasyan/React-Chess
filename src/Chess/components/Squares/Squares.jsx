@@ -4,6 +4,7 @@ export default function Square({ key, value, color, cursor, onClick }) {
   if (value !== null) {
     return (
       <div
+      key= {key}
         className={`${styles.square} ${styles[color]} ${cursor}`}
         onClick={onClick}
       >

@@ -3,13 +3,13 @@ export default function calcSquareColor(i, j, squares) {
     (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j))
       ? "white_square"
       : "black_square";
-  if (squares[i * 8 + j].highlight === 1) {
+  if (squares[i * 8 + j].highlight === true) {
     squareColor =
       (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j))
         ? "selected_white_square"
         : "selected_black_square";
   }
-  if (squares[i * 8 + j].possible === 1) {
+  if (squares[i * 8 + j].possible === true) {
     squareColor =
       (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j))
         ? "highlighted_white_square"
@@ -19,7 +19,7 @@ export default function calcSquareColor(i, j, squares) {
     squares[i * 8 + j].ascii !== null &&
     squares[i * 8 + j].ascii.toLowerCase() === "k"
   ) {
-    if (squares[i * 8 + j].in_check === 1) {
+    if (squares[i * 8 + j].inCheck === true) {
       squareColor =
         (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j))
           ? "in_check_square_white"

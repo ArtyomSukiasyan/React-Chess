@@ -9,6 +9,7 @@ import clearPossibleHighlight from "../../helpers/clearPossibleHighlight";
 import highlightMate from "../../helpers/highlightMate";
 import clearCheckHighlight from "../../helpers/clearCheckHighlight";
 import MatchInfo from "../MatchInfo/MatchInfo";
+import { state } from "../../constants/state";
 import { colNums, rowNums } from "../../constants/colsAndRows";
 import { white, black } from "../../constants/players";
 import {
@@ -29,7 +30,11 @@ import styles from "../../Game.module.css";
 export default class Board extends React.Component {
   constructor() {
     super();
-    this.state = {
+    this.state = state;
+  }
+
+  reset() {
+    this.setState({
       squares: initializeBoard(),
       source: -1,
       turn: white,
@@ -49,30 +54,6 @@ export default class Board extends React.Component {
       historyH3: [null],
       historyH4: [null],
       mated: false,
-    };
-  }
-
-  reset() {
-    this.setState({
-      squares: initializeBoard(),
-      source: -1,
-      turn: white,
-      trueTurn: white,
-      turnNum: 0,
-      whiteKingHasMoved: false,
-      blackKingHasMoved: false,
-      leftBlackRookHasMoved: false,
-      rightBlackRookHasMoved: false,
-      leftWhiteRookHasMoved: false,
-      rightWhiteRookHasMoved: false,
-      passantPos: 65,
-      history: [initializeBoard()],
-      historyNum: 1,
-      historyH1: [0],
-      historyH2: [0],
-      historyH3: [null],
-      historyH4: [null],
-      mated: false,
     });
   }
 
@@ -83,7 +64,7 @@ export default class Board extends React.Component {
     copySquares = clearPossibleHighlight(copySquares);
     for (let j = 0; j < 64; j++) {
       if (copySquares[j].ascii === whiteKing) {
-        copySquares[j].in_check = 0;
+        copySquares[j].inCheck = false;
         break;
       }
     }
@@ -213,14 +194,14 @@ export default class Board extends React.Component {
     if (isKing && Math.abs(end - start) === 2) {
       if (end === (copySquares[start].ascii === whiteKing ? 62 : 6)) {
         copySquares[end - 1] = copySquares[end + 1];
-        copySquares[end - 1].highlight = 1;
+        copySquares[end - 1].highlight = true;
         copySquares[end + 1] = new FillerPiece(null);
-        copySquares[end + 1].highlight = 1;
+        copySquares[end + 1].highlight = true;
       } else if (end === (copySquares[start].ascii === whiteKing ? 58 : 2)) {
         copySquares[end + 1] = copySquares[end - 2];
-        copySquares[end + 1].highlight = 1;
+        copySquares[end + 1].highlight = true;
         copySquares[end - 2] = new FillerPiece(null);
-        copySquares[end - 2].highlight = 1;
+        copySquares[end - 2].highlight = true;
       }
     }
 
@@ -239,17 +220,17 @@ export default class Board extends React.Component {
     }
 
     copySquares[end] = copySquares[start];
-    copySquares[end].highlight = 1;
+    copySquares[end].highlight = true;
     copySquares[start] = new FillerPiece(null);
-    copySquares[start].highlight = 1;
+    copySquares[start].highlight = true;
 
     if (copySquares[end].ascii === whitePawn && end >= 0 && end <= 7) {
       copySquares[end] = new Queen(white);
-      copySquares[end].highlight = 1;
+      copySquares[end].highlight = true;
     }
     if (copySquares[end].ascii === blackPawn && end >= 56 && end <= 63) {
       copySquares[end] = new Queen(black);
-      copySquares[end].highlight = 1;
+      copySquares[end].highlight = true;
     }
 
     return copySquares;
@@ -511,10 +492,11 @@ export default class Board extends React.Component {
 
       if (copySquares[i].player !== null) {
         copySquares = clearCheckHighlight(copySquares, white);
-        copySquares[i].highlight = 1;
+        copySquares[i].highlight = true;
 
         for (let j = 0; j < 64; j++) {
-          if (this.isMoveAvailable(i, j, copySquares)) copySquares[j].possible = 1;
+          if (this.isMoveAvailable(i, j, copySquares))
+            copySquares[j].possible = true;
         }
 
         this.setState({
@@ -527,11 +509,12 @@ export default class Board extends React.Component {
     if (this.state.source > -1) {
       let cannibalism = copySquares[i].player === this.state.turn;
       if (cannibalism === true && this.state.source !== i) {
-        copySquares[i].highlight = 1;
-        copySquares[this.state.source].highlight = 0;
+        copySquares[i].highlight = true;
+        copySquares[this.state.source].highlight = false;
         copySquares = clearPossibleHighlight(copySquares);
         for (let j = 0; j < 64; j++) {
-          if (this.isMoveAvailable(i, j, copySquares)) copySquares[j].possible = 1;
+          if (this.isMoveAvailable(i, j, copySquares))
+            copySquares[j].possible = true;
         }
         this.setState({
           source: i,
@@ -539,7 +522,7 @@ export default class Board extends React.Component {
         });
       } else {
         if (!this.isMoveAvailable(this.state.source, i, copySquares)) {
-          copySquares[this.state.source].highlight = 0;
+          copySquares[this.state.source].highlight = false;
           copySquares = clearPossibleHighlight(copySquares);
           if (
             i !== this.state.source &&
@@ -547,7 +530,7 @@ export default class Board extends React.Component {
           ) {
             for (let j = 0; j < 64; j++) {
               if (copySquares[j].ascii === whiteKing) {
-                copySquares[j].in_check = 1;
+                copySquares[j].inCheck = true;
                 break;
               }
             }
@@ -648,7 +631,7 @@ export default class Board extends React.Component {
         copySquares[j].ascii ===
         (this.state.turn === white ? whiteKing : blackKing)
       ) {
-        copySquares[j].in_check = 0;
+        copySquares[j].inCheck = false;
         copySquares[j].checked = 0;
         break;
       }
@@ -671,12 +654,12 @@ export default class Board extends React.Component {
 
     if (index !== 0 && index != null) {
       if (this.state.historyH1[index] != null) {
-        copySquares[this.state.historyH1[index]].highlight = 1;
-        copySquares[this.state.historyH2[index]].highlight = 1;
+        copySquares[this.state.historyH1[index]].highlight = true;
+        copySquares[this.state.historyH2[index]].highlight = true;
       }
       if (this.state.historyH3[index] != null) {
-        copySquares[this.state.historyH3[index]].highlight = 1;
-        copySquares[this.state.historyH4[index]].highlight = 1;
+        copySquares[this.state.historyH3[index]].highlight = true;
+        copySquares[this.state.historyH4[index]].highlight = true;
       }
     }
 
