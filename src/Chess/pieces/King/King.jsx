@@ -1,3 +1,4 @@
+import { white } from "../../constants/players";
 import whiteKing from "../../images/whiteKing.png";
 import blackKing from "../../images/blackKing.png";
 import styles from "../../Game.module.css";
@@ -10,12 +11,12 @@ export default class King {
     this.checked = 0;
     this.inCheck = 0;
     this.icon =
-      player === "w" ? (
+      player === white ? (
         <img src={whiteKing} className={styles.piece} alt="whiteKing"></img>
       ) : (
         <img src={blackKing} className={styles.piece} alt="blackKing"></img>
       );
-    this.ascii = player === "w" ? "k" : "K";
+    this.ascii = player === white ? "k" : "K";
   }
 
   canMove(start, end) {

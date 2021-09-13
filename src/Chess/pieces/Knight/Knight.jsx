@@ -1,3 +1,4 @@
+import { white } from "../../constants/players";
 import whiteKnight from "../../images/whiteKnight.png";
 import blackKnight from "../../images/blackKnight.png";
 import styles from "../../Game.module.css";
@@ -8,12 +9,12 @@ export default class Knight {
     this.highlight = 0;
     this.possible = 0;
     this.icon =
-      player === "w" ? (
+      player === white ? (
         <img src={whiteKnight} className={styles.piece} alt="whiteKnight"></img>
       ) : (
         <img src={blackKnight} className={styles.piece} alt="blackKnight"></img>
       );
-    this.ascii = player === "w" ? "n" : "N";
+    this.ascii = player === white ? "n" : "N";
   }
 
   canMove(start, end) {

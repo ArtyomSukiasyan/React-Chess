@@ -1,3 +1,4 @@
+import { white } from "../../constants/players";
 import whiteRook from "../../images/whiteRook.png";
 import blackRook from "../../images/blackRook.png";
 import styles from "../../Game.module.css";
@@ -8,12 +9,12 @@ export default class Rook {
     this.highlight = 0;
     this.possible = 0;
     this.icon =
-      player === "w" ? (
+      player === white ? (
         <img src={whiteRook} className={styles.piece} alt="whiteRook"></img>
       ) : (
         <img src={blackRook} className={styles.piece} alt="blackRook"></img>
       );
-    this.ascii = player === "w" ? "r" : "R";
+    this.ascii = player === white ? "r" : "R";
   }
 
   canMove(start, end) {
