@@ -11,7 +11,7 @@ import clearCheckHighlight from "../../helpers/clearCheckHighlight";
 import MatchInfo from "../MatchInfo/MatchInfo"
 import { colNums, rowNums } from "../../constants/colsAndRows";
 import { white, black } from "../../constants/players";
-import { whiteKing, blackKing } from "../../constants/asciis";
+import { whiteKing, blackKing, whitePawn, blackPawn } from "../../constants/asciis";
 import styles from "../../Game.module.css"
 
 export default class Board extends React.Component {
@@ -115,11 +115,11 @@ export default class Board extends React.Component {
 
     let passantTrue =
       player === white
-        ? copySquares[end].ascii === "p" &&
+        ? copySquares[end].ascii === whitePawn &&
           start >= 48 &&
           start <= 55 &&
           end - start === -16
-        : copySquares[end].ascii === "P" &&
+        : copySquares[end].ascii === blackPawn &&
           start >= 8 &&
           start <= 15 &&
           end - start === 16;
@@ -223,11 +223,11 @@ export default class Board extends React.Component {
     copySquares[start] = new FillerPiece(null);
     copySquares[start].highlight = 1;
 
-    if (copySquares[end].ascii === "p" && end >= 0 && end <= 7) {
+    if (copySquares[end].ascii === whitePawn && end >= 0 && end <= 7) {
       copySquares[end] = new Queen(white);
       copySquares[end].highlight = 1;
     }
-    if (copySquares[end].ascii === "P" && end >= 56 && end <= 63) {
+    if (copySquares[end].ascii === blackPawn && end >= 56 && end <= 63) {
       copySquares[end] = new Queen(black);
       copySquares[end].highlight = 1;
     }
@@ -329,22 +329,22 @@ export default class Board extends React.Component {
     }
     if (rowDiff === 1 && colDiff === 1) {
       if (copySquares[end].ascii === null) {
-        if (copySquares[start + 1].ascii !== "P" || passant !== start + 1)
+        if (copySquares[start + 1].ascii !== blackPawn || passant !== start + 1)
           return false;
       }
     } else if (rowDiff === 1 && colDiff === -1) {
       if (copySquares[end].ascii === null) {
-        if (copySquares[start - 1].ascii !== "P" || passant !== start - 1)
+        if (copySquares[start - 1].ascii !== blackPawn || passant !== start - 1)
           return false;
       }
     } else if (rowDiff === -1 && colDiff === 1) {
       if (copySquares[end].ascii === null) {
-        if (copySquares[start + 1].ascii !== "p" || passant !== start + 1)
+        if (copySquares[start + 1].ascii !== whitePawn || passant !== start + 1)
           return false;
       }
     } else if (rowDiff === -1 && colDiff === -1) {
       if (copySquares[end].ascii === null) {
-        if (copySquares[start - 1].ascii !== "p" || passant !== start - 1)
+        if (copySquares[start - 1].ascii !== whitePawn || passant !== start - 1)
           return false;
       }
     }
@@ -409,9 +409,9 @@ export default class Board extends React.Component {
     const checkSquares = squares.slice();
     checkSquares[end] = checkSquares[start];
     checkSquares[start] = new FillerPiece(null);
-    if (checkSquares[end].ascii === "p" && end >= 0 && end <= 7) {
+    if (checkSquares[end].ascii === whitePawn && end >= 0 && end <= 7) {
       checkSquares[end] = new Queen(white);
-    } else if (checkSquares[end].ascii === "P" && end >= 56 && end <= 63) {
+    } else if (checkSquares[end].ascii === blackPawn && end >= 56 && end <= 63) {
       checkSquares[end] = new Queen(black);
     }
     if (this.isCheck(player, checkSquares) === true) return false;
