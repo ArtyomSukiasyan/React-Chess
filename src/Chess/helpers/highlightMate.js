@@ -1,3 +1,5 @@
+import { white } from "../constants/players";
+
 export default function highlightMate(
   player,
   squares,
@@ -7,7 +9,7 @@ export default function highlightMate(
   const copySquares = squares.slice();
   if (checkMated || staleMated) {
     for (let i = 0; i < 64; i++) {
-      if (copySquares[i].ascii === (player === "w" ? "k" : "K")) {
+      if (copySquares[i].ascii === (player === white ? "k" : "K")) {
         copySquares[i].checked = checkMated === true ? 1 : 2;
         break;
       }
