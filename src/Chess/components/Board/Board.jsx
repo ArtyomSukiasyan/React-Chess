@@ -11,6 +11,7 @@ import clearCheckHighlight from "../../helpers/clearCheckHighlight";
 import MatchInfo from "../MatchInfo/MatchInfo"
 import { colNums, rowNums } from "../../constants/colsAndRows";
 import { white, black } from "../../constants/players";
+import { whiteKing, blackKing } from "../../constants/asciis";
 import styles from "../../Game.module.css"
 
 export default class Board extends React.Component {
@@ -69,13 +70,13 @@ export default class Board extends React.Component {
     copySquares = clearHighlight(copySquares).slice();
       copySquares = clearPossibleHighlight(copySquares).slice();
       for (let j = 0; j < 64; j++) {
-        if (copySquares[j].ascii === "k") {
+        if (copySquares[j].ascii === whiteKing) {
           copySquares[j].in_check = 0;
           break;
         }
     }
 
-    if (copySquares[start].ascii === (player === white ? "k" : "K")) {
+    if (copySquares[start].ascii === (player === white ? whiteKing : blackKing)) {
       if (player === white) {
         this.setState({
           whiteKingHasMoved: 1,
@@ -151,12 +152,12 @@ export default class Board extends React.Component {
     
 
     let isKing =
-    copySquares[end].ascii === "k" || copySquares[end].ascii === "K";
+    copySquares[end].ascii === whiteKing || copySquares[end].ascii === blackKing;
     if (isKing && Math.abs(end - start) === 2) {
-      if (end === (copySquares[end].ascii === "k" ? 62 : 6)) {
+      if (end === (copySquares[end].ascii === whiteKing ? 62 : 6)) {
         copyHistoryH3.push(end - 1);
         copyHistoryH4.push(end + 1);
-      } else if (end === (copySquares[end].ascii === "k" ? 58 : 2)) {
+      } else if (end === (copySquares[end].ascii === whiteKing ? 58 : 2)) {
         copyHistoryH3.push(end + 1);
         copyHistoryH4.push(end - 2);
       }
@@ -191,14 +192,14 @@ export default class Board extends React.Component {
   makeMove(squares, start, end, passantPos) {
     const copySquares = squares.slice();
     let isKing =
-    copySquares[start].ascii === "k" || copySquares[start].ascii === "K";
+    copySquares[start].ascii === whiteKing || copySquares[start].ascii === blackKing;
     if (isKing && Math.abs(end - start) === 2) {
-      if (end === (copySquares[start].ascii === "k" ? 62 : 6)) {
+      if (end === (copySquares[start].ascii === whiteKing ? 62 : 6)) {
         copySquares[end - 1] = copySquares[end + 1];
         copySquares[end - 1].highlight = 1;
         copySquares[end + 1] = new FillerPiece(null);
         copySquares[end + 1].highlight = 1;
-      } else if (end === (copySquares[start].ascii === "k" ? 58 : 2)) {
+      } else if (end === (copySquares[start].ascii === whiteKing ? 58 : 2)) {
         copySquares[end + 1] = copySquares[end - 2];
         copySquares[end + 1].highlight = 1;
         copySquares[end - 2] = new FillerPiece(null);
@@ -367,7 +368,7 @@ export default class Board extends React.Component {
       pawn === true &&
       this.goodPawn(start, end, copySquares, passantPos) === false;
     if (invalid) return invalid;
-    let king = copySquares[start].ascii.toLowerCase() === "k";
+    let king = copySquares[start].ascii.toLowerCase() === whiteKing;
     if (king && Math.abs(end - start) === 2)
       invalid = this.castlingAllowed(start, end, copySquares) === false;
 
@@ -389,13 +390,13 @@ export default class Board extends React.Component {
       return false;
 
     let cantCastle =
-    copySquares[start].ascii === (player === white ? "k" : "K") &&
+    copySquares[start].ascii === (player === white ? whiteKing : blackKing) &&
       Math.abs(end - start) === 2 &&
       this.isCheck(player, copySquares);
     if (cantCastle) return false;
 
     if (
-      copySquares[start].ascii === (player === white ? "k" : "K") &&
+      copySquares[start].ascii === (player === white ? whiteKing : blackKing) &&
       Math.abs(end - start) === 2
     ) {
       let deltaPos = end - start;
@@ -419,7 +420,7 @@ export default class Board extends React.Component {
   }
 
   isCheck(player, squares) {
-    let king = player === white ? "k" : "K";
+    let king = player === white ? whiteKing : blackKing;
     let positionOfKing = null;
     const copySquares = squares.slice();
     for (let i = 0; i < 64; i++) {
@@ -518,7 +519,7 @@ export default class Board extends React.Component {
             this.isCheck(white, copySquares) === true
           ) {
             for (let j = 0; j < 64; j++) {
-              if (copySquares[j].ascii === "k") {
+              if (copySquares[j].ascii === whiteKing) {
                 copySquares[j].in_check = 1;
                 break;
               }
@@ -616,7 +617,7 @@ export default class Board extends React.Component {
     copySquares = clearPossibleHighlight(copySquares).slice();
     copySquares = clearHighlight(copySquares).slice();
     for (let j = 0; j < 64; j++) {
-      if (copySquares[j].ascii === (this.state.turn === white ? "k" : "K")) {
+      if (copySquares[j].ascii === (this.state.turn === white ? whiteKing : blackKing)) {
         copySquares[j].in_check = 0;
         copySquares[j].checked = 0;
         break;
