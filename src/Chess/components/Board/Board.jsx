@@ -11,7 +11,7 @@ import clearCheckHighlight from "../../helpers/clearCheckHighlight";
 import MatchInfo from "../MatchInfo/MatchInfo"
 import { colNums, rowNums } from "../../constants/colsAndRows";
 import { white, black } from "../../constants/players";
-import { whiteKing, blackKing, whitePawn, blackPawn } from "../../constants/asciis";
+import { whiteKing, blackKing, whitePawn, blackPawn, whiteRook, blackRook } from "../../constants/asciis";
 import styles from "../../Game.module.css"
 
 export default class Board extends React.Component {
@@ -87,7 +87,7 @@ export default class Board extends React.Component {
         });
       }
     }
-    if (copySquares[start].ascii === (player === white ? "r" : "R")) {
+    if (copySquares[start].ascii === (player === white ? whiteRook : blackRook)) {
       if (start === (player === white ? 56 : 0)) {
         if (player === white) {
           this.setState({
@@ -243,7 +243,7 @@ export default class Board extends React.Component {
     if (
       (deltaPos === 2
         ? copySquares[end + 1].ascii
-        : copySquares[end - 2].ascii) !== (player === white ? "r" : "R")
+        : copySquares[end - 2].ascii) !== (player === white ? whiteRook : blackRook)
     )
       return false;
     if (
