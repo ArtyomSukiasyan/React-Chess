@@ -35,12 +35,12 @@ export default class Board extends React.Component {
       turn: white,
       trueTurn: white,
       turnNum: 0,
-      whiteKingHasMoved: 0,
-      blackKingHasMoved: 0,
-      leftBlackRookHasMoved: 0,
-      rightBlackRookHasMoved: 0,
-      leftWhiteRookHasMoved: 0,
-      rightWhiteRookHasMoved: 0,
+      whiteKingHasMoved: false,
+      blackKingHasMoved: false,
+      leftBlackRookHasMoved: false,
+      rightBlackRookHasMoved: false,
+      leftWhiteRookHasMoved: false,
+      rightWhiteRookHasMoved: false,
       passantPos: 65,
       history: [initializeBoard()],
       historyNum: 1,
@@ -59,12 +59,12 @@ export default class Board extends React.Component {
       turn: white,
       trueTurn: white,
       turnNum: 0,
-      whiteKingHasMoved: 0,
-      blackKingHasMoved: 0,
-      leftBlackRookHasMoved: 0,
-      rightBlackRookHasMoved: 0,
-      leftWhiteRookHasMoved: 0,
-      rightWhiteRookHasMoved: 0,
+      whiteKingHasMoved: false,
+      blackKingHasMoved: false,
+      leftBlackRookHasMoved: false,
+      rightBlackRookHasMoved: false,
+      leftWhiteRookHasMoved: false,
+      rightWhiteRookHasMoved: false,
       passantPos: 65,
       history: [initializeBoard()],
       historyNum: 1,
@@ -93,11 +93,11 @@ export default class Board extends React.Component {
     ) {
       if (player === white) {
         this.setState({
-          whiteKingHasMoved: 1,
+          whiteKingHasMoved: true,
         });
       } else {
         this.setState({
-          blackKingHasMoved: 1,
+          blackKingHasMoved: true,
         });
       }
     }
@@ -107,21 +107,21 @@ export default class Board extends React.Component {
       if (start === (player === white ? 56 : 0)) {
         if (player === white) {
           this.setState({
-            leftWhiteRookHasMoved: 1,
+            leftWhiteRookHasMoved: true,
           });
         } else {
           this.setState({
-            leftBlackRookHasMoved: 1,
+            leftBlackRookHasMoved: true,
           });
         }
       } else if (start === (player === white ? 63 : 7)) {
         if (player === white) {
           this.setState({
-            rightWhiteRookHasMoved: 1,
+            rightWhiteRookHasMoved: true,
           });
         } else {
           this.setState({
-            rightBlackRookHasMoved: 1,
+            rightBlackRookHasMoved: true,
           });
         }
       }
@@ -270,21 +270,21 @@ export default class Board extends React.Component {
     if (
       (player === white
         ? this.state.whiteKingHasMoved
-        : this.state.blackKingHasMoved) !== 0
+        : this.state.blackKingHasMoved) !== false
     )
       return false;
     if (player === white) {
       if (
         (deltaPos === 2
           ? this.state.rightWhiteRookHasMoved
-          : this.state.leftWhiteRookHasMoved) !== 0
+          : this.state.leftWhiteRookHasMoved) !== false
       )
         return false;
     } else if (player === black) {
       if (
         (deltaPos === 2
           ? this.state.rightBlackRookHasMoved
-          : this.state.leftBlackRookHasMoved) !== 0
+          : this.state.leftBlackRookHasMoved) !== false
       )
         return false;
     }
