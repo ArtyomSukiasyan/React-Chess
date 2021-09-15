@@ -28,27 +28,30 @@ export default class King {
     const rowDiff = endRow - startRow;
     const colDiff = endCol - startCol;
 
-    if (rowDiff === 1 && colDiff === -1) {
-      return true;
-    } else if (rowDiff === 1 && colDiff === 0) {
-      return true;
-    } else if (rowDiff === 1 && colDiff === 1) {
-      return true;
-    } else if (rowDiff === 0 && colDiff === 1) {
-      return true;
-    } else if (rowDiff === -1 && colDiff === 1) {
-      return true;
-    } else if (rowDiff === -1 && colDiff === 0) {
-      return true;
-    } else if (rowDiff === -1 && colDiff === -1) {
-      return true;
-    } else if (rowDiff === 0 && colDiff === -1) {
-      return true;
-    } else if (rowDiff === 0 && colDiff === 2) {
-      return true;
-    } else if (rowDiff === 0 && colDiff === -2) {
-      return true;
-    }
-    return false;
+    const topLeft = rowDiff === 1 && colDiff === -1;
+    const top = rowDiff === 1 && colDiff === 0;
+    const topRight = rowDiff === 1 && colDiff === 1;
+    const downLeft = rowDiff === -1 && colDiff === -1;
+    const down = rowDiff === -1 && colDiff === 0;
+    const downRight = rowDiff === -1 && colDiff === 1;
+    const dubleLeft = rowDiff === 0 && colDiff === -2;
+    const left = rowDiff === 0 && colDiff === -1;
+    const fixed = rowDiff === 0 && colDiff === 0;
+    const right = rowDiff === 0 && colDiff === 1;
+    const dubleRight = rowDiff === 0 && colDiff === 2;
+
+    return (
+      topLeft ||
+      top ||
+      topRight ||
+      downLeft ||
+      down ||
+      downRight ||
+      left ||
+      dubleLeft ||
+      fixed ||
+      right ||
+      dubleRight
+    );
   }
 }
