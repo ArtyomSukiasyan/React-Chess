@@ -236,7 +236,6 @@ export default class Board extends React.Component {
       }
       copySquares[end].highlight = true;
     }
-
     return copySquares;
   }
 
@@ -577,7 +576,6 @@ export default class Board extends React.Component {
       }
       board.push(<div key={i + 64}>{squareRows}</div>);
     }
-    console.log(board);
     return (
       <div className={styles.game}>
         <div>

@@ -26,19 +26,9 @@ export default class Queen {
     const rowDiff = endRow - startRow;
     const colDiff = endCol - startCol;
 
-    if (rowDiff > 0 && colDiff === 0) {
-      return true;
-    } else if (rowDiff === 0 && colDiff > 0) {
-      return true;
-    } else if (rowDiff < 0 && colDiff === 0) {
-      return true;
-    } else if (rowDiff === 0 && colDiff < 0) {
-      return true;
-    } else if (rowDiff === colDiff) {
-      return true;
-    } else if (rowDiff === -colDiff) {
-      return true;
-    }
-    return false;
+    const haveDiagonalMove = rowDiff === colDiff || rowDiff === -colDiff;
+    const haveVerticalMove = rowDiff * colDiff === 0 && rowDiff + colDiff !== 0;
+
+    return haveDiagonalMove || haveVerticalMove;
   }
 }
