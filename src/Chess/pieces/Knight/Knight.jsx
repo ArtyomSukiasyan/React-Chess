@@ -26,23 +26,24 @@ export default class Knight {
     const rowDiff = endRow - startRow;
     const colDiff = endCol - startCol;
 
-    if (rowDiff === 1 && colDiff === -2) {
-      return true;
-    } else if (rowDiff === 2 && colDiff === -1) {
-      return true;
-    } else if (rowDiff === 2 && colDiff === 1) {
-      return true;
-    } else if (rowDiff === 1 && colDiff === 2) {
-      return true;
-    } else if (rowDiff === -1 && colDiff === 2) {
-      return true;
-    } else if (rowDiff === -2 && colDiff === 1) {
-      return true;
-    } else if (rowDiff === -2 && colDiff === -1) {
-      return true;
-    } else if (rowDiff === -1 && colDiff === -2) {
-      return true;
-    }
-    return false;
+    const leftTop = rowDiff === 1 && colDiff === -2;
+    const topLeft = rowDiff === 2 && colDiff === -1;
+    const topRight = rowDiff === 2 && colDiff === 1;
+    const rightTop = rowDiff === 1 && colDiff === 2;
+    const rightDown = rowDiff === -1 && colDiff === 2;
+    const downRight = rowDiff === -2 && colDiff === 1;
+    const downLeft = rowDiff === -2 && colDiff === -1;
+    const leftDown = rowDiff === -1 && colDiff === -2;
+
+    return (
+      leftTop ||
+      topLeft ||
+      topRight ||
+      rightTop ||
+      rightDown ||
+      downRight ||
+      downLeft ||
+      leftDown
+    );
   }
 }
