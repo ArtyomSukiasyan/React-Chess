@@ -28,15 +28,15 @@ export default class Pawn {
 
     if (this.player === white) {
       if (colDiff === 0) {
-        if (rowDiff === 1 || rowDiff === 2) return true;
+        return rowDiff === 1 || rowDiff === 2;
       } else if (colDiff === -1 || colDiff === 1) {
-        if (rowDiff === 1) return true;
+        return rowDiff === 1;
       }
     } else {
       if (colDiff === 0) {
-        if (rowDiff === -2 || rowDiff === -1) return true;
+        return rowDiff === -2 || rowDiff === -1;
       } else if (colDiff === -1 || colDiff === 1) {
-        if (rowDiff === -1) return true;
+        return rowDiff === -1;
       }
     }
     return false;
