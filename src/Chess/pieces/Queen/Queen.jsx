@@ -1,7 +1,5 @@
 import { white } from "../../constants/players";
 import { whiteQueen, blackQueen } from "../../constants/asciis";
-import whiteQueenImage from "../../images/whiteQueen.png";
-import blackQueenImage from "../../images/blackQueen.png";
 import styles from "../../Game.module.css";
 
 export default class Queen {
@@ -9,12 +7,13 @@ export default class Queen {
     this.player = player;
     this.highlight = 0;
     this.possible = 0;
-    this.icon =
-      player === white ? (
-        <img src={whiteQueenImage} className={styles.piece} alt="whiteQueen"></img>
-      ) : (
-        <img src={blackQueenImage} className={styles.piece} alt="blackQueen"></img>
-      );
+    this.icon = (
+      <span className={styles.piece}>
+        {player === white
+          ? String.fromCharCode(9813)
+          : String.fromCharCode(9819)}
+      </span>
+    );
     this.ascii = player === white ? whiteQueen : blackQueen;
   }
 

@@ -11,12 +11,19 @@ export default class King {
     this.possible = 0;
     this.checked = 0;
     this.inCheck = 0;
-    this.icon =
-      player === white ? (
-        <img src={whiteKingImage} className={styles.piece} alt="whiteKing"></img>
-      ) : (
-        <img src={blackKingImage} className={styles.piece} alt="blackKing"></img>
-      );
+    // this.icon =
+    //   player === white ? (
+    //     <img src={whiteKingImage} className={styles.piece} alt="whiteKing"></img>
+    //   ) : (
+    //     <img src={blackKingImage} className={styles.piece} alt="blackKing"></img>
+    //   );
+    this.icon = (
+      <span className={styles.piece}>
+        {player === white
+          ? String.fromCharCode(9812)
+          : String.fromCharCode(9818)}
+      </span>
+    );
     this.ascii = player === white ? whiteKing : blackKing;
   }
 

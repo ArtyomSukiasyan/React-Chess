@@ -1,7 +1,5 @@
 import { white } from "../../constants/players";
 import { whiteKnight, blackKnight } from "../../constants/asciis";
-import whiteKnightImage from "../../images/whiteKnight.png";
-import blackKnightImage from "../../images/blackKnight.png";
 import styles from "../../Game.module.css";
 
 export default class Knight {
@@ -9,12 +7,13 @@ export default class Knight {
     this.player = player;
     this.highlight = 0;
     this.possible = 0;
-    this.icon =
-      player === white ? (
-        <img src={whiteKnightImage} className={styles.piece} alt="whiteKnight"></img>
-      ) : (
-        <img src={blackKnightImage} className={styles.piece} alt="blackKnight"></img>
-      );
+    this.icon = (
+      <span className={styles.piece}>
+        {player === white
+          ? String.fromCharCode(9816)
+          : String.fromCharCode(9822)}
+      </span>
+    );
     this.ascii = player === white ? whiteKnight : blackKnight;
   }
 
