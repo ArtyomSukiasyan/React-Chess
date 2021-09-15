@@ -5,8 +5,8 @@ import styles from "../../Game.module.css";
 export default class Knight {
   constructor(player) {
     this.player = player;
-    this.highlight = 0;
-    this.possible = 0;
+    this.highlight = false;
+    this.possible = false;
     this.icon = (
       <span className={styles.piece}>
         {player === white

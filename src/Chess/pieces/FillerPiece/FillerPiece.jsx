@@ -1,8 +1,8 @@
 export default class FillerPiece {
   constructor(player) {
     this.player = player;
-    this.highlight = 0;
-    this.possible = 0;
+    this.highlight = false;
+    this.possible = false;
     this.icon = null;
     this.ascii = null;
   }

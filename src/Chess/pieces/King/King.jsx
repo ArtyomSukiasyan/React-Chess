@@ -5,10 +5,10 @@ import styles from "../../Game.module.css";
 export default class King {
   constructor(player) {
     this.player = player;
-    this.highlight = 0;
-    this.possible = 0;
-    this.checked = 0;
-    this.inCheck = 0;
+    this.highlight = false;
+    this.possible = false;
+    this.checked = false;
+    this.inCheck = false;
     this.icon = (
       <span className={styles.piece}>
         {player === white
