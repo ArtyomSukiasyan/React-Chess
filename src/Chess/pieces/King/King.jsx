@@ -1,7 +1,5 @@
 import { white } from "../../constants/players";
 import { whiteKing, blackKing } from "../../constants/asciis";
-import whiteKingImage from "../../images/whiteKing.png";
-import blackKingImage from "../../images/blackKing.png";
 import styles from "../../Game.module.css";
 
 export default class King {
@@ -11,12 +9,6 @@ export default class King {
     this.possible = 0;
     this.checked = 0;
     this.inCheck = 0;
-    // this.icon =
-    //   player === white ? (
-    //     <img src={whiteKingImage} className={styles.piece} alt="whiteKing"></img>
-    //   ) : (
-    //     <img src={blackKingImage} className={styles.piece} alt="blackKing"></img>
-    //   );
     this.icon = (
       <span className={styles.piece}>
         {player === white
