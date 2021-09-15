@@ -1,6 +1,9 @@
 import React from "react";
 import FillerPiece from "../../pieces/FillerPiece/FillerPiece";
 import Queen from "../../pieces/Queen/Queen";
+import Rook from "../../pieces/Rook/Rook"
+import Bishop from "../../pieces/Bishop/Bishop"
+import Knight from "../../pieces/Knight/Knight"
 import Square from "../Squares/Squares";
 import calcSquareColor from "../../helpers/calcSquareColor";
 import clearHighlight from "../../helpers/clearHighlight";
@@ -27,8 +30,6 @@ import {
 import { next, back, nextAtw, backAtw } from "../../constants/histories";
 import styles from "../../Game.module.css";
 
-
-
 export default class Board extends React.Component {
   constructor() {
     super();
@@ -36,7 +37,7 @@ export default class Board extends React.Component {
   }
 
   reset() {
-    clearHighlight(this.state.squares)
+    clearHighlight(this.state.squares);
     this.setState(state);
   }
 
@@ -96,13 +97,13 @@ export default class Board extends React.Component {
     let passantTrue =
       player === white
         ? copySquares[end].ascii === whitePawn &&
-        start >= 48 &&
-        start <= 55 &&
-        end - start === -16
+          start >= 48 &&
+          start <= 55 &&
+          end - start === -16
         : copySquares[end].ascii === blackPawn &&
-        start >= 8 &&
-        start <= 15 &&
-        end - start === 16;
+          start >= 8 &&
+          start <= 15 &&
+          end - start === 16;
     let passant = passantTrue ? end : 65;
 
     if (player === white) {
@@ -208,11 +209,31 @@ export default class Board extends React.Component {
     copySquares[start].highlight = true;
 
     if (copySquares[end].ascii === whitePawn && end >= 0 && end <= 7) {
-      copySquares[end] = new Queen(white);
+      const figure = prompt("please, select 'queen', 'rook', 'bishop' or 'knight'")
+      if(figure === "queen"){
+        copySquares[end] = new Queen(white);
+      } else if(figure === "rook"){
+        copySquares[end] = new Rook(white);
+      } else if(figure === "bishop"){
+        copySquares[end] = new Bishop(white);
+      } else if(figure === "knight") {
+        copySquares[end] = new Knight(white);
+
+      }
       copySquares[end].highlight = true;
     }
     if (copySquares[end].ascii === blackPawn && end >= 56 && end <= 63) {
-      copySquares[end] = new Queen(black);
+      const figure = prompt("please, select 'queen', 'rook', 'bishop' or 'knight'")
+      if(figure === "queen"){
+        copySquares[end] = new Queen(black);
+      } else if(figure === "rook"){
+        copySquares[end] = new Rook(black);
+      } else if(figure === "bishop"){
+        copySquares[end] = new Bishop(black);
+      } else if(figure === "knight") {
+        copySquares[end] = new Knight(black);
+
+      }
       copySquares[end].highlight = true;
     }
 
@@ -556,14 +577,14 @@ export default class Board extends React.Component {
       }
       board.push(<div key={i + 64}>{squareRows}</div>);
     }
-
+    console.log(board);
     return (
       <div className={styles.game}>
         <div>
           <div className={styles.board}>
             <div className={styles.row_label}> {rowNums} </div>
             <div>
-              <div className={styles.table}> {board} </div>
+              <div className={styles.table}> {board}</div>
               <div className={styles.col_label}> {colNums} </div>
             </div>
           </div>
