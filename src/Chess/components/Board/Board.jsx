@@ -1,9 +1,9 @@
 import React from "react";
 import FillerPiece from "../../pieces/FillerPiece/FillerPiece";
 import Queen from "../../pieces/Queen/Queen";
-import Rook from "../../pieces/Rook/Rook"
-import Bishop from "../../pieces/Bishop/Bishop"
-import Knight from "../../pieces/Knight/Knight"
+import Rook from "../../pieces/Rook/Rook";
+import Bishop from "../../pieces/Bishop/Bishop";
+import Knight from "../../pieces/Knight/Knight";
 import Square from "../Squares/Squares";
 import calcSquareColor from "../../helpers/calcSquareColor";
 import clearHighlight from "../../helpers/clearHighlight";
@@ -209,30 +209,32 @@ export default class Board extends React.Component {
     copySquares[start].highlight = true;
 
     if (copySquares[end].ascii === whitePawn && end >= 0 && end <= 7) {
-      const figure = prompt("please, select 'queen', 'rook', 'bishop' or 'knight'")
-      if(figure === "queen"){
+      const figure = prompt(
+        "please, select 'queen', 'rook', 'bishop' or 'knight'"
+      );
+      if (figure === "queen") {
         copySquares[end] = new Queen(white);
-      } else if(figure === "rook"){
+      } else if (figure === "rook") {
         copySquares[end] = new Rook(white);
-      } else if(figure === "bishop"){
+      } else if (figure === "bishop") {
         copySquares[end] = new Bishop(white);
-      } else if(figure === "knight") {
+      } else if (figure === "knight") {
         copySquares[end] = new Knight(white);
-
       }
       copySquares[end].highlight = true;
     }
     if (copySquares[end].ascii === blackPawn && end >= 56 && end <= 63) {
-      const figure = prompt("please, select 'queen', 'rook', 'bishop' or 'knight'")
-      if(figure === "queen"){
+      const figure = prompt(
+        "please, select 'queen', 'rook', 'bishop' or 'knight'"
+      );
+      if (figure === "queen") {
         copySquares[end] = new Queen(black);
-      } else if(figure === "rook"){
+      } else if (figure === "rook") {
         copySquares[end] = new Rook(black);
-      } else if(figure === "bishop"){
+      } else if (figure === "bishop") {
         copySquares[end] = new Bishop(black);
-      } else if(figure === "knight") {
+      } else if (figure === "knight") {
         copySquares[end] = new Knight(black);
-
       }
       copySquares[end].highlight = true;
     }
@@ -369,19 +371,16 @@ export default class Board extends React.Component {
       copySquares[start].ascii === blackPawn ||
       copySquares[start].ascii === whiteKing ||
       copySquares[start].ascii === blackKing;
-    let invalid =
-      bqrpk === true && this.blockersExist(start, end, copySquares) === true;
+    let invalid = bqrpk && this.blockersExist(start, end, copySquares);
     if (invalid) return invalid;
     let pawn =
       copySquares[start].ascii === whitePawn ||
       copySquares[start].ascii === blackPawn;
-    invalid =
-      pawn === true &&
-      this.goodPawn(start, end, copySquares, passantPos) === false;
+    invalid = pawn && !this.goodPawn(start, end, copySquares, passantPos);
     if (invalid) return invalid;
     let king = copySquares[start].ascii.toLowerCase() === whiteKing;
     if (king && Math.abs(end - start) === 2)
-      invalid = this.castlingAllowed(start, end, copySquares) === false;
+      invalid = !this.castlingAllowed(start, end, copySquares);
 
     return invalid;
   }
@@ -393,11 +392,10 @@ export default class Board extends React.Component {
     let player = copySquares[start].player;
     if (
       player === copySquares[end].player ||
-      copySquares[start].canMove(start, end) === false
+      !copySquares[start].canMove(start, end)
     )
       return false;
-    if (this.isInvalidMove(start, end, copySquares, passantPos) === true)
-      return false;
+    if (this.isInvalidMove(start, end, copySquares, passantPos)) return false;
 
     let cantCastle =
       copySquares[start].ascii === (player === white ? whiteKing : blackKing) &&
@@ -428,7 +426,7 @@ export default class Board extends React.Component {
     ) {
       checkSquares[end] = new Queen(black);
     }
-    if (this.isCheck(player, checkSquares) === true) return false;
+    if (this.isCheck(player, checkSquares)) return false;
 
     return true;
   }
@@ -447,8 +445,8 @@ export default class Board extends React.Component {
     for (let i = 0; i < 64; i++) {
       if (copySquares[i].player !== player) {
         if (
-          copySquares[i].canMove(i, positionOfKing) === true &&
-          this.isInvalidMove(i, positionOfKing, copySquares) === false
+          copySquares[i].canMove(i, positionOfKing) &&
+          !this.isInvalidMove(i, positionOfKing, copySquares)
         )
           return true;
       }
@@ -511,7 +509,7 @@ export default class Board extends React.Component {
 
     if (this.state.source > -1) {
       let cannibalism = copySquares[i].player === this.state.turn;
-      if (cannibalism === true && this.state.source !== i) {
+      if (cannibalism && this.state.source !== i) {
         copySquares[i].highlight = true;
         copySquares[this.state.source].highlight = false;
         copySquares = clearPossibleHighlight(copySquares);
@@ -527,10 +525,7 @@ export default class Board extends React.Component {
         if (!this.isMoveAvailable(this.state.source, i, copySquares)) {
           copySquares[this.state.source].highlight = false;
           copySquares = clearPossibleHighlight(copySquares);
-          if (
-            i !== this.state.source &&
-            this.isCheck(white, copySquares) === true
-          ) {
+          if (i !== this.state.source && this.isCheck(white, copySquares)) {
             for (let j = 0; j < 64; j++) {
               if (copySquares[j].ascii === whiteKing) {
                 copySquares[j].inCheck = true;
