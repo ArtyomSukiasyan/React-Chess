@@ -1,6 +1,6 @@
 import React from "react";
-import Board from "./components/Board/Board";
+import GameLogic from "./components/GameLogic/GameLogic";
 
 export default function Game() {
-  return <Board />;
+  return <GameLogic />;
 }
