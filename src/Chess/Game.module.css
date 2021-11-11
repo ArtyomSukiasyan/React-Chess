@@ -19,7 +19,6 @@ body {
   width: 50%;
 }
 
-
 .table {
   width: 80vmin;
   height: 80vmin;
@@ -33,25 +32,6 @@ body {
 .col_label {
   width: 80vmin;
   height: 5vmin;
-}
-
-.wrapper {
-  margin-left: 5%;
-  display: flex;
-}
-
-.white_move{
-  position: absolute;
-  top: 80vh;
-  width: 20px;
-  height: 20px;
-  background-color: #00ba6d;
-}
-
-.black_move{
-  width: 20px;
-  height: 20px;
-  background-color: #00ba6d;
 }
 
 .side_box {
@@ -139,14 +119,10 @@ body {
   background-color: #16aad3;
 }
 
-
 .highlighted_square {
   background-color: #a1d890;
 }
 
-
 .in_check_square {
   background-color: #272d2f;
 }
-
-

@@ -487,15 +487,6 @@ export default class Board extends React.Component {
             nextAtw={() => this.viewHistory(nextAtw)}
           />
         </div>
-        <div className={styles.wrapper}>
-          <div
-            className={this.state.turn === white ? styles.white_move : ""}
-          ></div>
-
-          <div
-            className={this.state.turn === black ? styles.black_move : ""}
-          ></div>
-        </div>
       </div>
     );
   }
