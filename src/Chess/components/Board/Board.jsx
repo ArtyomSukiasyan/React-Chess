@@ -5,12 +5,13 @@ import Rook from "../../pieces/Rook/Rook";
 import Bishop from "../../pieces/Bishop/Bishop";
 import Knight from "../../pieces/Knight/Knight";
 import Square from "../Squares/Squares";
+import MatchInfo from "../MatchInfo/MatchInfo";
 import calcSquareColor from "../../helpers/calcSquareColor";
 import clearHighlight from "../../helpers/clearHighlight";
 import clearPossibleHighlight from "../../helpers/clearPossibleHighlight";
 import highlightMate from "../../helpers/highlightMate";
 import clearCheckHighlight from "../../helpers/clearCheckHighlight";
-import MatchInfo from "../MatchInfo/MatchInfo";
+import castlingAllowed from "../../helpers/castlingAllowed";
 import { state } from "../../constants/state";
 import { colNums, rowNums } from "../../constants/colsAndRows";
 import { white, black } from "../../constants/players";
@@ -241,43 +242,6 @@ export default class Board extends React.Component {
     return copySquares;
   }
 
-  castlingAllowed(start, end, squares) {
-    const copySquares = squares.slice();
-    let player = copySquares[start].player;
-    let deltaPos = end - start;
-    if (start !== (player === white ? 60 : 4)) return false;
-    if (
-      (deltaPos === 2
-        ? copySquares[end + 1].ascii
-        : copySquares[end - 2].ascii) !==
-      (player === white ? whiteRook : blackRook)
-    )
-      return false;
-    if (
-      (player === white
-        ? this.state.whiteKingHasMoved
-        : this.state.blackKingHasMoved) !== false
-    )
-      return false;
-    if (player === white) {
-      if (
-        (deltaPos === 2
-          ? this.state.rightWhiteRookHasMoved
-          : this.state.leftWhiteRookHasMoved) !== false
-      )
-        return false;
-    } else if (player === black) {
-      if (
-        (deltaPos === 2
-          ? this.state.rightBlackRookHasMoved
-          : this.state.leftBlackRookHasMoved) !== false
-      )
-        return false;
-    }
-
-    return true;
-  }
-
   blockersExist(start, end, squares) {
     let startRow = 8 - Math.floor(start / 8);
     let startCol = (start % 8) + 1;
@@ -380,7 +344,17 @@ export default class Board extends React.Component {
     if (invalid) return invalid;
     let king = copySquares[start].ascii.toLowerCase() === whiteKing;
     if (king && Math.abs(end - start) === 2)
-      invalid = !this.castlingAllowed(start, end, copySquares);
+      invalid = !castlingAllowed(
+        start,
+        end,
+        copySquares,
+        this.state.whiteKingHasMoved,
+        this.state.blackKingHasMoved,
+        this.state.rightWhiteRookHasMoved,
+        this.state.leftWhiteRookHasMoved,
+        this.state.rightBlackRookHasMoved,
+        this.state.leftBlackRookHasMoved
+      );
 
     return invalid;
   }
